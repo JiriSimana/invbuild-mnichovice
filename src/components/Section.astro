@@ -1,0 +1,42 @@
+---
+// Generic section wrapper — gives every block consistent spacing + eyebrow + title pattern
+export interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  variant?: 'default' | 'soft' | 'dark';
+  align?: 'left' | 'center';
+}
+const { id, eyebrow, title, variant = 'default', align = 'left' } = Astro.props;
+const className = [
+  'section',
+  variant === 'soft' && 'section--soft',
+  variant === 'dark' && 'section--dark',
+].filter(Boolean).join(' ');
+---
+
+<section id={id} class={className}>
+  <div class="container">
+    {(eyebrow || title) && (
+      <header class:list={['section__header', align === 'center' && 'section__header--center']}>
+        {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+        {title && <h2 class="section__title">{title}</h2>}
+      </header>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section__header {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    max-width: 36ch;
+  }
+  .section__header--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+  .section__title {
+    margin-top: 0.5rem;
+  }
+</style>

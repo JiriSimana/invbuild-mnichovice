@@ -1,0 +1,239 @@
+---
+// Header — sticky top bar with "Chci poptat" CTA (left) and hamburger drawer (right)
+// Vychází 1:1 ze stávajícího Wix designu.
+export interface Props {
+  menu?: { label: string; href: string }[];
+  pdfHref?: string;   // PDF půdorys odkaz
+  phone?: string;
+  email?: string;
+  address?: string;
+  ico?: string;
+}
+
+const {
+  menu = [
+    { label: 'Domů',         href: '#hero' },
+    { label: 'Galerie',      href: '#galerie' },
+    { label: 'O projektu',   href: '#mnichovice' },
+    { label: 'Lokalita',     href: '#lokalita' },
+    { label: 'Naše služby',  href: '#sluzby' },
+    { label: 'Kontakt',      href: '#kontakt' },
+  ],
+  pdfHref = '/dokumenty/pudorys-mnichovice.pdf',
+  phone   = '+420 704 971 814',
+  email   = 'info@invbuild.cz',
+  address = 'Lužná 716/2, Vokovice',
+  ico     = '11632046',
+} = Astro.props;
+---
+
+<header class="topbar">
+  <a href="#kontakt" class="topbar__cta">Chci poptat</a>
+
+  <button type="button" class="topbar__menu-btn" aria-label="Otevřít menu" aria-controls="drawer" aria-expanded="false" data-menu-open>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+</header>
+
+<aside id="drawer" class="drawer" aria-hidden="true">
+  <div class="drawer__backdrop" data-menu-close></div>
+
+  <div class="drawer__panel">
+    <button type="button" class="drawer__close" aria-label="Zavřít menu" data-menu-close>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <nav class="drawer__nav">
+      <ul role="list">
+        {menu.map((item) => (
+          <li><a href={item.href} data-menu-close-link>{item.label}</a></li>
+        ))}
+        <li>
+          <a href={pdfHref} target="_blank" rel="noopener" class="drawer__pdf">
+            PDF půdorys
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <footer class="drawer__foot">
+      <div class="drawer__logo">INVBUILD</div>
+      <dl>
+        <div><dt>IČ:</dt><dd>{ico}</dd></div>
+        <div><dt>Tel:</dt><dd><a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a></dd></div>
+        <div><dt>E-mail:</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>
+        <div><dt></dt><dd>{address}</dd></div>
+      </dl>
+      <a href="https://invbuild.cz" target="_blank" rel="noopener" class="drawer__site-link">
+        INV Build oficiální →
+      </a>
+    </footer>
+  </div>
+</aside>
+
+<style>
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-sticky);
+    padding: clamp(1rem, 2vw, 1.5rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;          /* let scrolling pass through gaps */
+  }
+  .topbar > * { pointer-events: auto; }
+
+  /* ---- Chci poptat ---- */
+  .topbar__cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.85rem 1.5rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 8px 24px rgba(224, 163, 43, 0.35);
+    transition: transform var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out);
+  }
+  .topbar__cta:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+  }
+
+  /* ---- hamburger ---- */
+  .topbar__menu-btn {
+    width: 52px; height: 52px;
+    display: grid; place-items: center;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 50%;
+    box-shadow: var(--shadow-md);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .topbar__menu-btn:hover { background: var(--paper-soft); }
+
+  /* ---- drawer ---- */
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    pointer-events: none;
+    visibility: hidden;
+  }
+  .drawer[aria-hidden='false'] { pointer-events: auto; visibility: visible; }
+
+  .drawer__backdrop {
+    position: absolute; inset: 0;
+    background: rgba(10, 10, 10, 0.55);
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .drawer[aria-hidden='false'] .drawer__backdrop { opacity: 1; }
+
+  .drawer__panel {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: min(420px, 90vw);
+    background: var(--paper);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform var(--dur-base) var(--ease-out);
+    overflow-y: auto;
+  }
+  .drawer[aria-hidden='false'] .drawer__panel { transform: translateX(0); }
+
+  .drawer__close {
+    align-self: flex-end;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    color: var(--accent);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .drawer__close:hover { background: var(--paper-soft); }
+
+  .drawer__nav {
+    flex: 1;
+    margin-top: clamp(1.5rem, 4vw, 3rem);
+  }
+  .drawer__nav ul { display: flex; flex-direction: column; gap: 0.25rem; }
+  .drawer__nav a {
+    display: block;
+    padding: 0.85rem 0;
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    transition: color var(--dur-fast) var(--ease-out), padding-left var(--dur-fast) var(--ease-out);
+  }
+  .drawer__nav a:hover { color: var(--accent); padding-left: 0.5rem; }
+
+  .drawer__pdf {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--accent) !important;
+  }
+
+  .drawer__foot {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+  .drawer__logo {
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .drawer__foot dl {
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .drawer__foot dl > div { display: flex; justify-content: center; gap: 0.4rem; }
+  .drawer__foot dl dt { font-weight: 500; color: var(--ink); }
+  .drawer__foot dl a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .drawer__site-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: var(--fs-sm);
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>
+
+<script>
+  // Drawer open/close + Esc + outside click
+  const openBtn  = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  const drawer   = document.getElementById('drawer');
+  const closers  = document.querySelectorAll<HTMLElement>('[data-menu-close], [data-menu-close-link]');
+
+  function setOpen(open: boolean) {
+    if (!drawer || !openBtn) return;
+    drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+    openBtn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  openBtn?.addEventListener('click', () => setOpen(true));
+  closers.forEach((el) => el.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+</script>

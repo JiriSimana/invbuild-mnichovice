@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = 'Rodinný dům Mnichovice — INVBUILD',
+  description = 'Rodinný dům v Mnichovicích | 5+1 · 159 m² užitné plochy · pozemek 480 m² · cena 31.900.000 Kč. Prodává INVBUILD.',
+  ogImage = '/og-image.jpg',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="cs_CZ" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- JSON-LD: RealEstateListing -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Residence",
+      "name": "Rodinný dům Mnichovice",
+      "description": description,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Mnichovice",
+        "addressCountry": "CZ"
+      },
+      "floorSize": { "@type": "QuantitativeValue", "value": 159, "unitText": "m²" },
+      "numberOfRooms": 5,
+      "offers": {
+        "@type": "Offer",
+        "price": 31900000,
+        "priceCurrency": "CZK"
+      }
+    })} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

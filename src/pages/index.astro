@@ -1,0 +1,225 @@
+---
+import Layout      from '../layouts/Layout.astro';
+import Header      from '../components/Header.astro';
+import Hero        from '../components/Hero.astro';
+import Section     from '../components/Section.astro';
+import Gallery     from '../components/Gallery.astro';
+import StorySplit  from '../components/StorySplit.astro';
+import Lokalita    from '../components/Lokalita.astro';
+import Services    from '../components/Services.astro';
+import Kontakt     from '../components/Kontakt.astro';
+import Footer      from '../components/Footer.astro';
+
+// ----- HERO -----
+const stats = [
+  { label: 'Rozloha projektu', value: '480 m²' },
+  { label: 'Užitá plocha',     value: '159 m²' },
+  { label: 'Dispozice',         value: '5+1'    },
+  { label: 'Cena',              value: '31 900 000,-' },
+];
+
+// Hero carousel — 3 nejlepší exteriérové vizualizace
+const heroImages = [
+  { src: '/img/mnichovice-01.webp', alt: 'Rodinný dům Mnichovice — pohled z ulice' },
+  { src: '/img/mnichovice-05.webp', alt: 'Rodinný dům Mnichovice — boční pohled' },
+  { src: '/img/mnichovice-07.webp', alt: 'Rodinný dům Mnichovice — exteriér s terasou' },
+];
+
+// ----- GALERIE -----
+const galleryImages = Array.from({ length: 16 }, (_, i) => {
+  const n = String(i + 1).padStart(2, '0');
+  return { src: `/img/mnichovice-${n}.webp`, alt: `Vizualizace ${i + 1} — Rodinný dům Mnichovice` };
+});
+
+// ----- LOKALITA / BUDOVA accordion -----
+const locGroups = [
+  {
+    id: '1np',
+    title: '1. NP',
+    content: `<p><strong>Celková užitná plocha podlaží: 77,3 m²</strong></p>
+      <ul>
+        <li><strong>Ložnice</strong> o rozloze 16,37 m² je vybavena laminátovou podlahou, stěny jsou pokryty omítkou.</li>
+        <li><strong>Koupelna a WC</strong> zabírají 4,03 m² a jsou vybaveny keramickou dlažbou a obkladem.</li>
+        <li><strong>Technická místnost</strong> má 1,36 m² s keramickou podlahou a obkladem.</li>
+        <li><strong>Vstupní hala</strong> s rozlohou 11,05 m² vyniká keramickou dlažbou a omítkou na stěnách.</li>
+        <li><strong>Obývací pokoj</strong> je na 18,27 m² s laminátovou podlahou a kombinací obkladu a omítky.</li>
+        <li><strong>Kuchyňská část</strong> pokrývá 13,43 m² s keramickou podlahou a stěnami s omítkou a obkladem.</li>
+        <li><strong>Jídelna</strong> má 12,67 m², keramickou podlahu a stěny s omítkou a obkladem.</li>
+      </ul>`,
+  },
+  {
+    id: '2np',
+    title: '2. NP',
+    content: `<p><strong>Celková užitná plocha podlaží: 81,8 m²</strong></p>
+      <ul>
+        <li><strong>První ložnice</strong> má 18,89 m² s laminátovou podlahou a stěnami s omítkou a obkladem.</li>
+        <li><strong>Druhá ložnice</strong> je větší s 23,00 m², také s laminátovou podlahou a stěnami s omítkou a obkladem.</li>
+        <li><strong>Koupelna a WC</strong> zabírají 3,43 m² a mají keramickou podlahu a obklad.</li>
+        <li><strong>Chodba</strong> má 13,49 m² s laminátovou podlahou a omítkou na stěnách.</li>
+        <li><strong>Terasa</strong> je prostorná s 16,55 m² a keramickou podlahou.</li>
+      </ul>`,
+  },
+  {
+    id: 'tech',
+    title: 'Technické vybavení',
+    content: `<p>V rámci objektu dojde k instalaci rozvodů vody, kanalizace, elektřiny a vytápění
+      s tepelným čerpadlem vzduch/voda. Objekt bude rovněž chráněn proti blesku.</p>
+      <ul>
+        <li><strong>Splašková odpadní voda</strong> potečou přes PVC kanalizační přípojku do hlavního kanalizačního řadu.</li>
+        <li><strong>Zásobování vodou</strong> zajistí upravená vodovodní přípojka, zatímco dešťová voda bude odvedena do retenční nádrže na pozemku.</li>
+        <li><strong>Elektrická energie</strong> bude přivedena připojením objektu na síť nízkého napětí (NN).</li>
+        <li><strong>Dispozice 5+1</strong>, 2 koupelny, technická místnost, terasa, šatna.</li>
+      </ul>`,
+  },
+  {
+    id: 'stodola',
+    title: 'Stodola a kůlna',
+    content: `<ul>
+        <li><strong>Budova stodoly</strong> s plochou 52,40 m² projde rekonstrukcí na zimní-letní zahradu.</li>
+        <li><strong>Kůlna</strong> s plochou 44,00 m² bude přestavěna na garáž a v patře vznikne pánský salonek.</li>
+      </ul>`,
+  },
+  {
+    id: 'lokalita',
+    title: 'Lokalita',
+    content: `<p>Mnichovice, obec situovaná východně od Prahy. Tato lokalita je známá svou
+      krásnou přírodou a klidným prostředím, což z ní činí atraktivní místo pro bydlení i rekreaci.</p>
+      <p>V blízkosti se nachází sjezdovka <strong>Šibeniční vrch</strong> — lyžování na sjezdovce o délce cca 250 m,
+      večerní lyžování, umělé zasněžování a pravidelná úprava.</p>
+      <p>Větší obchodní dům <strong>Westfield Chodov</strong> se nachází pouze 15 minut jízdy autem.</p>`,
+  },
+];
+
+// ----- SLUŽBY -----
+const serviceCards = [
+  { image: { src: '/img/mnichovice-11.webp', alt: 'Moderní koupelna' } },
+  { image: { src: '/img/mnichovice-13.webp', alt: 'Ložnice s designovým osvětlením' } },
+  { image: { src: '/img/mnichovice-04.webp', alt: 'Otevřený obývací prostor s krbem' } },
+];
+---
+
+<Layout
+  title="Rodinný dům Mnichovice — 5+1 · 159 m² · INVBUILD"
+  description="Nová kompletní rekonstrukce rodinného domu v Mnichovicích, 15 minut od Prahy. 5+1, 159 m² užitné plochy, pozemek 480 m². Cena 31 900 000 Kč. Prodává INVBUILD."
+>
+  <Header />
+
+  <!-- HERO ============================================================== -->
+  <Hero title="Rodinný dům Mnichovice" stats={stats} images={heroImages} />
+
+  <!-- GALERIE =========================================================== -->
+  <Section id="galerie" variant="dark" eyebrow="Galerie projektu" title="Prohlédněte si interaktivní galerii developerského projektu v Mnichovicích.">
+    <Gallery images={galleryImages} />
+  </Section>
+
+  <!-- MNICHOVICE ======================================================== -->
+  <Section id="mnichovice">
+    <StorySplit
+      eyebrow="O projektu"
+      title="Mnichovice"
+      image={{ src: '/img/mnichovice-12.webp', alt: 'Jídelna v rodinném domě Mnichovice' }}
+    >
+      <p>
+        Aktuálně přinášíme informace ohledně našeho developerského projektu —
+        kompletní rekonstrukce rodinného domu se zahradou, v obci
+        <strong>Mnichovice</strong>, situované východně od Prahy, 15 minut od
+        Westfield Chodov.
+      </p>
+      <p>
+        Projekt je zasazený do venkovského stylu s moderními prvky architektury,
+        který nabídne novým majitelům také letní / zimní zahradu, celé volné
+        patro k využití nad garáží a hlavně dostatek soukromí.
+      </p>
+    </StorySplit>
+  </Section>
+
+  <!-- REKONSTRUKCE ====================================================== -->
+  <Section id="rekonstrukce" variant="dark">
+    <StorySplit
+      variant="dark"
+      reverse
+      eyebrow="Stavba"
+      title="Rekonstrukce"
+      image={{ src: '/img/mnichovice-09.webp', alt: 'Moderní interiér ložnice' }}
+    >
+      <p>
+        Prodejní cena po dokončení rekonstrukce, která <strong>začala 8. ledna 2024</strong>
+        a předpokládá se její <strong>dokončení koncem roku 2024 / začátek roku 2025</strong>.
+        Nové dispoziční řešení nově zrekonstruovaného domu bude <strong>5+1</strong>
+        včetně technické místnosti, vstupní haly, šatny a terasy. Užitá plocha
+        domu bez pozemku bude takto činit <strong>159 m²</strong>.
+      </p>
+      <p>
+        V rámci celkové rekonstrukce vznikne také zastřešená garáž, která
+        v horním patře nabídne možnost pro pokoj pro hosty či pánský klub,
+        cokoliv si nový majitel bude přát. Přístavba samotné jídelny umožní
+        krásný výhled přímo z domu na zahradu a díky tomu vznik terasy
+        v horním patře s přístupem k ložnici.
+      </p>
+      <p>
+        Další velké plus je <strong>letní / zimní zahrada (kuchyň)</strong>, která
+        nabídne příjemně strávené chvíle s rodinou či přáteli, nehledě
+        na počasí.
+      </p>
+    </StorySplit>
+  </Section>
+
+  <!-- DISPOZICE ========================================================= -->
+  <Section id="dispozice">
+    <StorySplit
+      eyebrow="Dispozice"
+      title="Dispozice"
+      image={{ src: '/img/mnichovice-02.webp', alt: 'Pohled na dům s prosklenou fasádou a zahradou' }}
+    >
+      <p>
+        Rodinný dům nabídne dispozici <strong>5+1 či možné 6+1</strong>, se zvýšeným
+        důrazem na moderní prvky a luxusní vybavení, které respektuje
+        venkovský styl a přitom klade velký důraz na spojení s přírodou
+        — včetně prosklených prvků a přímých vstupů z obývacího pokoje,
+        kuchyně a jídelny do zahrady.
+      </p>
+      <p>
+        Součástí dalšího užití potenciálu celé nemovitosti je zmiňovaná velká
+        garáž s horním patrem a letní / zimní zahrada.
+      </p>
+    </StorySplit>
+  </Section>
+
+  <!-- SEZNÁMENÍ S BUDOVOU A LOKALITA ==================================== -->
+  <Section id="lokalita" variant="dark" eyebrow="Mapa a detail" title="Seznámení s budovou a lokalita" align="center">
+    <p class="lokalita__intro">
+      Zjistěte dodatečné informace o lokalitě a okolí nemovitosti.
+    </p>
+    <Lokalita
+      address="Mnichovice, okres Praha-východ"
+      coordinates="49.9300,14.7011"
+      groups={locGroups}
+    />
+  </Section>
+
+  <!-- SLUŽBY ============================================================ -->
+  <Section id="sluzby" eyebrow="Doplňkové" title="Naše ostatní služby" align="center">
+    <Services items={serviceCards} />
+  </Section>
+
+  <!-- KONTAKT =========================================================== -->
+  <Section id="kontakt" variant="soft" eyebrow="Kontakt" title="Zajímá Vás více?" align="center">
+    <Kontakt />
+  </Section>
+
+  <Footer />
+</Layout>
+
+<style>
+  .lokalita__intro {
+    text-align: center;
+    color: rgba(255,255,255,0.75);
+    margin-top: -1rem;
+    margin-bottom: 2.5rem;
+    font-size: var(--fs-base);
+  }
+
+  /* Dark sections inherit white headings */
+  :global(.section--dark) :global(.section__title) { color: var(--paper); }
+  :global(.section--dark) :global(.eyebrow) { color: var(--accent); }
+</style>

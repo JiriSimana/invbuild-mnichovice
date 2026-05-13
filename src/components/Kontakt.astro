@@ -1,0 +1,136 @@
+---
+// Kontakt — formulář "Zajímá Vás více?" v INVBUILD stylu
+export interface Props {
+  phone?: string;
+  altPhone?: string;
+  email?: string;
+  website?: string;
+}
+const {
+  phone    = '+420 704 971 814',
+  altPhone = '+420 704 971 809',
+  email    = 'info@invbuild.cz',
+  website  = 'www.invbuild.cz',
+} = Astro.props;
+---
+
+<div class="kontakt">
+  <div class="kontakt__intro">
+    <p>
+      V rámci probíhající rekonstrukce má nový potenciální majitel možnosti
+      a velkou výhodu si říct jaké úpravy či možné změny se dají realizovat
+      dle vlastních přání.
+    </p>
+    <p>
+      Vyplňte formulář a zanechte svůj kontakt. Případně nás neváhejte
+      kontaktovat na telefonním čísle
+      <a href={`tel:${altPhone.replace(/\s/g, '')}`}><strong>{altPhone}</strong></a>,
+      nebo na naší webové stránce
+      <a href={`https://${website}`} target="_blank" rel="noopener"><strong>{website}</strong></a>.
+    </p>
+  </div>
+
+  <form class="form" id="poptavka" method="POST" action="/api/poptavka" novalidate>
+    <div class="form__field">
+      <label for="name">Jméno a příjmení <span aria-hidden="true">*</span></label>
+      <input id="name" name="name" type="text" required autocomplete="name" />
+    </div>
+
+    <div class="form__row">
+      <div class="form__field">
+        <label for="phone">Telefon <span aria-hidden="true">*</span></label>
+        <input id="phone" name="phone" type="tel" required autocomplete="tel" />
+      </div>
+      <div class="form__field">
+        <label for="email">E-mail <span aria-hidden="true">*</span></label>
+        <input id="email" name="email" type="email" required autocomplete="email" />
+      </div>
+    </div>
+
+    <div class="form__field">
+      <label for="message">Vaše zpráva <span aria-hidden="true">*</span></label>
+      <textarea id="message" name="message" rows="4" required placeholder="Co byste rádi věděli o projektu?"></textarea>
+    </div>
+
+    <label class="form__gdpr">
+      <input type="checkbox" name="gdpr" required />
+      <span>Souhlasím se <a href="/gdpr">zpracováním osobních údajů</a>.</span>
+    </label>
+
+    <button type="submit" class="form__submit">Odeslat</button>
+  </form>
+</div>
+
+<style>
+  .kontakt {
+    max-width: 740px;
+    margin-inline: auto;
+  }
+  .kontakt__intro {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: var(--fs-base);
+    color: var(--muted);
+    max-width: 60ch;
+    margin-inline: auto;
+  }
+  .kontakt__intro p + p { margin-top: 1rem; }
+  .kontakt__intro a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+  .form { display: flex; flex-direction: column; gap: 1.5rem; }
+  .form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 560px) { .form__row { grid-template-columns: 1fr; } }
+
+  .form__field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form__field label {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+  }
+  .form__field input,
+  .form__field textarea {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--accent);
+    padding: 0.65rem 0 0.6rem;
+    font-size: var(--fs-base);
+    color: inherit;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .form__field input:focus,
+  .form__field textarea:focus {
+    outline: none;
+    border-bottom-color: var(--ink);
+    box-shadow: 0 1px 0 0 var(--ink);
+  }
+  .form__field textarea { resize: vertical; min-height: 80px; }
+
+  .form__gdpr {
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .form__gdpr a { color: var(--accent); text-decoration: underline; }
+
+  .form__submit {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    padding: 0.95rem 3.5rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-base);
+    font-weight: 600;
+    transition: background var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+  }
+  .form__submit:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+  }
+</style>

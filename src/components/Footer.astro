@@ -1,0 +1,50 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="footer__logo">INVBUILD</span>
+      <span class="footer__tagline">Realizujeme vize ve skutečnost.</span>
+    </div>
+    <div class="footer__meta">
+      <span>© {year} Invbuild Group a.s. · IČ 11632046</span>
+      <span>·</span>
+      <a href="/gdpr">GDPR</a>
+      <span>·</span>
+      <a href="/cookies">Cookies</a>
+      <span>·</span>
+      <span>Web: <a href="https://smartcase.cz" target="_blank" rel="noopener">Smartcase Agency</a></span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.75);
+    padding-block: 1.75rem;
+    font-size: var(--fs-xs);
+  }
+  .footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .footer__logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-right: 0.6rem;
+  }
+  .footer__tagline { opacity: 0.7; }
+  .footer__meta {
+    display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+  }
+  .footer__meta a { text-decoration: underline; text-underline-offset: 3px; }
+  .footer__meta a:hover { color: var(--accent); }
+</style>
