@@ -1,19 +1,28 @@
 ---
-// SectionNav — sticky pravý scrollspy v glass-blur pillu.
-// Vlastní tmavé pozadí → vždy čitelné nad jakoukoliv sekcí (žádné auto-detection).
+// SectionNav — collapsible scrollspy pill.
+// Default = collapsed (jen dots, nepřekáží obsahu).
+// Tap toggle / Esc / click-outside → collapse.
 export interface Props {
   items: { id: string; label: string }[];
 }
 const { items } = Astro.props;
 ---
 
-<nav class="snav" aria-label="Navigace po sekcích" data-section-nav>
+<nav class="snav" aria-label="Navigace po sekcích" data-section-nav data-expanded="false">
+  <button type="button" class="snav__toggle" aria-label="Rozbalit popisky sekcí" aria-expanded="false" data-snav-toggle>
+    <svg class="snav__toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
   <ul role="list">
     {items.map((it, i) => (
       <li>
         <a href={`#${it.id}`} data-snav-link={it.id} aria-label={`${String(i + 1).padStart(2, '0')} — ${it.label}`}>
-          <span class="snav__label">{it.label}</span>
-          <span class="snav__num lining">{String(i + 1).padStart(2, '0')}</span>
+          <span class="snav__details">
+            <span class="snav__label">{it.label}</span>
+            <span class="snav__num lining">{String(i + 1).padStart(2, '0')}</span>
+          </span>
           <span class="snav__dot" aria-hidden="true"></span>
         </a>
       </li>
@@ -22,10 +31,10 @@ const { items } = Astro.props;
 </nav>
 
 <style>
-  /* Glass-blur pill — vlastní tmavé pozadí pro konzistentní čitelnost */
+  /* Glass-blur pill — kotví se vpravo, růst doleva */
   .snav {
     position: fixed;
-    right: clamp(0.75rem, 1.5vw, 1.5rem);
+    right: clamp(0.5rem, 1vw, 1rem);
     top: 50%;
     transform: translateY(-50%);
     z-index: var(--z-sticky);
@@ -35,9 +44,36 @@ const { items } = Astro.props;
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-xl);
-    padding: 0.85rem 1.05rem 0.85rem 0.95rem;
+    padding: 0.5rem 0.7rem 0.75rem;
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+    transition: padding var(--dur-base) var(--ease-out);
   }
+  .snav[data-expanded='true'] {
+    padding: 0.5rem 1rem 0.85rem 0.9rem;
+  }
+
+  /* Toggle button — vždy nahoře, šipka se otáčí podle stavu */
+  .snav__toggle {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 26px;
+    color: rgba(255, 255, 255, 0.55);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.25rem;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .snav__toggle:hover { color: var(--paper); }
+  .snav__toggle-icon {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .snav[data-expanded='true'] .snav__toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  /* List */
   .snav ul {
     display: flex;
     flex-direction: column;
@@ -47,22 +83,37 @@ const { items } = Astro.props;
     padding: 0;
   }
 
-  /* Items */
+  /* Item — řádek = (details | dot) */
   .snav a {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
+    display: flex;
     align-items: center;
     gap: 0.7rem;
-    padding: 0.4rem 0;
+    padding: 0.35rem 0;
     color: rgba(255, 255, 255, 0.62);
     transition: color var(--dur-fast) var(--ease-out);
+    justify-content: flex-end;
   }
   .snav a:hover,
   .snav a[data-active='true'] {
     color: var(--paper);
   }
 
-  /* Label — vždy viditelný */
+  /* Details — schované při collapsed, animuje max-width */
+  .snav__details {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width var(--dur-base) var(--ease-out),
+                opacity var(--dur-fast) var(--ease-out);
+  }
+  .snav[data-expanded='true'] .snav__details {
+    max-width: 180px;
+    opacity: 1;
+  }
+
   .snav__label {
     font-family: var(--font-sans);
     font-size: 11px;
@@ -73,8 +124,6 @@ const { items } = Astro.props;
     white-space: nowrap;
     text-align: right;
   }
-
-  /* Number — drobné v monospace */
   .snav__num {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -86,12 +135,12 @@ const { items } = Astro.props;
   }
   .snav a[data-active='true'] .snav__num { color: var(--accent); }
 
-  /* Dot — aktivní = žlutý protáhlý */
   .snav__dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
     background: currentColor;
+    flex-shrink: 0;
     transition: width var(--dur-base) var(--ease-out),
                 background var(--dur-fast) var(--ease-out),
                 box-shadow var(--dur-fast) var(--ease-out);
@@ -103,20 +152,53 @@ const { items } = Astro.props;
     box-shadow: 0 0 0 4px rgba(217, 152, 33, 0.18);
   }
 
-  /* Hide on mobile/tablet — drawer covers this */
-  @media (max-width: 1100px) {
+  /* Hide on mobile/small tablet — drawer covers this */
+  @media (max-width: 1024px) {
     .snav { display: none; }
   }
 </style>
 
 <script>
-  const nav  = document.querySelector<HTMLElement>('[data-section-nav]');
-  const links = nav ? Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-snav-link]')) : [];
+  const nav      = document.querySelector<HTMLElement>('[data-section-nav]');
+  const toggle   = nav?.querySelector<HTMLButtonElement>('[data-snav-toggle]');
+  const links    = nav ? Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-snav-link]')) : [];
   const sections = links
     .map((l) => document.getElementById(l.dataset.snavLink ?? ''))
     .filter((el): el is HTMLElement => !!el);
 
-  if (nav && links.length && sections.length) {
+  if (nav && toggle && links.length && sections.length) {
+    // ----- Expanded toggle -----
+    const setExpanded = (state: boolean) => {
+      nav.dataset.expanded = String(state);
+      toggle.setAttribute('aria-expanded', String(state));
+      toggle.setAttribute(
+        'aria-label',
+        state ? 'Sbalit popisky sekcí' : 'Rozbalit popisky sekcí',
+      );
+    };
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = nav.dataset.expanded === 'true';
+      setExpanded(!open);
+    });
+
+    // Click on a link → navigate + collapse
+    links.forEach((l) => {
+      l.addEventListener('click', () => setExpanded(false));
+    });
+
+    // Click outside → collapse
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target as Node)) setExpanded(false);
+    });
+
+    // Escape → collapse
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setExpanded(false);
+    });
+
+    // ----- Active section tracking -----
     let activeId = '';
     const setActive = (id: string) => {
       if (id === activeId) return;
@@ -138,10 +220,9 @@ const { items } = Astro.props;
         }
         if (bestId) setActive(bestId);
       },
-      { threshold: [0, 0.25, 0.5, 0.75, 1] }
+      { threshold: [0, 0.25, 0.5, 0.75, 1] },
     );
     sections.forEach((s) => io.observe(s));
-
     setActive(sections[0].id);
   }
 </script>
