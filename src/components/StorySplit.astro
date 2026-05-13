@@ -1,72 +1,128 @@
 ---
-// StorySplit — Text + foto vedle sebe. Lze přehodit pořadí pomocí `reverse`.
-// Sekce typu MNICHOVICE, REKONSTRUKCE, DISPOZICE.
+// StorySplit — Asymmetric editorial layout: oversized image + offset text column
+// Optional drop cap, image caption, numbered section
 export interface Props {
+  num?: string;                      // "01"
   eyebrow?: string;
   title: string;
   image: { src: string; alt: string };
-  reverse?: boolean;   // pokud true, obrázek vlevo, text vpravo
+  caption?: string;                  // figure caption below image
+  reverse?: boolean;                 // image on left
   variant?: 'light' | 'dark';
+  dropcap?: boolean;
 }
-const { eyebrow, title, image, reverse = false, variant = 'light' } = Astro.props;
+const {
+  num,
+  eyebrow,
+  title,
+  image,
+  caption,
+  reverse = false,
+  variant = 'light',
+  dropcap = true,
+} = Astro.props;
 ---
 
-<div class:list={['split', reverse && 'split--reverse', `split--${variant}`]}>
+<div class:list={['split', reverse && 'split--reverse', `split--${variant}`]} data-reveal>
   <div class="split__text">
-    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    {(num || eyebrow) && (
+      <span class="eyebrow">
+        {num && <span class="eyebrow__num">{num}</span>}
+        {eyebrow && <span>{eyebrow}</span>}
+      </span>
+    )}
     <h2 class="split__title">{title}</h2>
-    <div class="split__body"><slot /></div>
+    <div class:list={['split__body', dropcap && 'dropcap']}><slot /></div>
   </div>
 
   <figure class="split__media">
     <img src={image.src} alt={image.alt} loading="lazy" />
+    {caption && <figcaption class="split__caption">{caption}</figcaption>}
   </figure>
 </div>
 
 <style>
   .split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 5vw, 5rem);
-    align-items: center;
+    grid-template-columns: 1fr 1.2fr;            /* asymmetric — image larger */
+    gap: clamp(2rem, 5vw, 6rem);
+    align-items: start;
   }
+  .split--reverse { grid-template-columns: 1.2fr 1fr; }
   .split--reverse .split__text  { order: 2; }
   .split--reverse .split__media { order: 1; }
 
-  @media (max-width: 860px) {
-    .split { grid-template-columns: 1fr; }
+  @media (max-width: 920px) {
+    .split,
+    .split--reverse { grid-template-columns: 1fr; }
     .split--reverse .split__text  { order: 1; }
     .split--reverse .split__media { order: 2; }
   }
 
-  .split__title {
-    margin: 0.5rem 0 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
+  .split__text {
+    position: sticky;
+    top: clamp(4rem, 8vh, 7rem);
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2vw, 1.5rem);
   }
+  @media (max-width: 920px) { .split__text { position: static; } }
+
+  .split__title {
+    margin: 0;
+    text-wrap: balance;
+  }
+
   .split__body {
     font-size: var(--fs-base);
     line-height: var(--lh-base);
     color: var(--muted);
-    max-width: 56ch;
+    max-width: 52ch;
+    margin-top: 0.5rem;
   }
-  .split--dark .split__body { color: rgba(255,255,255,0.8); }
+  .split--dark .split__body { color: rgba(255,255,255,0.78); }
   .split--dark .split__title { color: var(--paper); }
-  .split--dark .eyebrow { color: var(--accent); }
+  .split--dark .eyebrow { color: rgba(255,255,255,0.7); }
+  .split--dark .eyebrow__num { color: var(--accent); }
 
-  .split__body :global(p + p) { margin-top: 1rem; }
-  .split__body :global(strong) { color: var(--ink); }
+  .split__body :global(p + p) { margin-top: 1.1rem; }
+  .split__body :global(strong) {
+    color: var(--ink);
+    font-weight: 500;
+  }
   .split--dark .split__body :global(strong) { color: var(--paper); }
 
+  /* media */
   .split__media {
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    aspect-ratio: 4 / 3;
-    background: var(--paper-warm);
+    aspect-ratio: 3 / 4;                  /* portrait — more editorial than 4:3 */
+    background: var(--paper-bone);
+    position: relative;
   }
   .split__media img {
     width: 100%; height: 100%; object-fit: cover;
-    transition: transform var(--dur-slow) var(--ease-out);
+    transition: transform 1.2s var(--ease-out);
   }
-  .split:hover .split__media img { transform: scale(1.02); }
+  .split:hover .split__media img { transform: scale(1.03); }
+
+  .split__caption {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    pointer-events: none;
+  }
+
+  /* on wider screens, allow image to be slightly taller */
+  @media (min-width: 1100px) {
+    .split__media { aspect-ratio: 4 / 5; }
+  }
 </style>

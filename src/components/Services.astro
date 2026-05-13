@@ -1,55 +1,70 @@
 ---
-// Services — 3 cards (Naše ostatní služby)
+// Services — numbered card grid with captions, editorial styling
 export interface Props {
-  items: { title?: string; image: { src: string; alt: string }; href?: string }[];
+  items: { num?: string; title: string; image: { src: string; alt: string }; href?: string }[];
 }
 const { items } = Astro.props;
 ---
 
 <div class="services">
-  {items.map((it) => (
-    it.href ? (
-      <a class="service" href={it.href}>
-        <figure class="service__media"><img src={it.image.src} alt={it.image.alt} loading="lazy" /></figure>
-        {it.title && <h4 class="service__title">{it.title}</h4>}
-      </a>
-    ) : (
-      <div class="service">
-        <figure class="service__media"><img src={it.image.src} alt={it.image.alt} loading="lazy" /></figure>
-        {it.title && <h4 class="service__title">{it.title}</h4>}
-      </div>
-    )
-  ))}
+  {items.map((it, i) => {
+    const tag = it.href ? 'a' : 'div';
+    const num = it.num ?? String(i + 1).padStart(2, '0');
+    return (
+      <article class="service" data-reveal style={`--reveal-delay: ${i * 80}ms`}>
+        <figure class="service__media">
+          <img src={it.image.src} alt={it.image.alt} loading="lazy" />
+        </figure>
+        <header class="service__head">
+          <span class="service__num lining">{num}</span>
+          <h4 class="service__title">{it.title}</h4>
+        </header>
+      </article>
+    );
+  })}
 </div>
 
 <style>
   .services {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1rem, 2.5vw, 1.75rem);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
   }
-  @media (max-width: 820px) { .services { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 520px) { .services { grid-template-columns: 1fr; } }
+  @media (max-width: 880px) { .services { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px) { .services { grid-template-columns: 1fr; } }
 
-  .service {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
+  .service { display: flex; flex-direction: column; gap: 1rem; }
+
   .service__media {
     aspect-ratio: 4 / 5;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    background: var(--paper-warm);
+    background: var(--paper-bone);
   }
   .service__media img {
     width: 100%; height: 100%; object-fit: cover;
-    transition: transform var(--dur-slow) var(--ease-out);
+    transition: transform 1s var(--ease-out);
   }
   .service:hover .service__media img { transform: scale(1.04); }
+
+  .service__head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    align-items: baseline;
+    padding-top: 0.25rem;
+  }
+  .service__num {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--accent);
+  }
   .service__title {
-    margin-top: 1rem;
-    font-size: var(--fs-base);
-    font-weight: 500;
+    margin: 0;
+    font-size: var(--fs-lg);
+    font-weight: 400;
+    letter-spacing: var(--tracking-tight);
+    font-variation-settings: 'opsz' 36, 'SOFT' 50;
   }
 </style>

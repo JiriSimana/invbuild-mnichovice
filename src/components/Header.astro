@@ -1,9 +1,8 @@
 ---
-// Header — sticky top bar with "Chci poptat" CTA (left) and hamburger drawer (right)
-// Vychází 1:1 ze stávajícího Wix designu.
+// Header — refined sticky bar with "Chci poptat" CTA + hamburger drawer
 export interface Props {
   menu?: { label: string; href: string }[];
-  pdfHref?: string;   // PDF půdorys odkaz
+  pdfHref?: string;
   phone?: string;
   email?: string;
   address?: string;
@@ -28,12 +27,16 @@ const {
 ---
 
 <header class="topbar">
-  <a href="#kontakt" class="topbar__cta">Chci poptat</a>
+  <a href="#kontakt" class="topbar__cta">
+    <span>Chci poptat</span>
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
 
   <button type="button" class="topbar__menu-btn" aria-label="Otevřít menu" aria-controls="drawer" aria-expanded="false" data-menu-open>
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
+    <span class="topbar__menu-line"></span>
+    <span class="topbar__menu-line"></span>
   </button>
 </header>
 
@@ -42,37 +45,41 @@ const {
 
   <div class="drawer__panel">
     <button type="button" class="drawer__close" aria-label="Zavřít menu" data-menu-close>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </button>
 
     <nav class="drawer__nav">
-      <ul role="list">
-        {menu.map((item) => (
-          <li><a href={item.href} data-menu-close-link>{item.label}</a></li>
+      <ol role="list">
+        {menu.map((item, i) => (
+          <li>
+            <a href={item.href} data-menu-close-link>
+              <span class="drawer__num lining">{String(i + 1).padStart(2, '0')}</span>
+              <span class="drawer__label">{item.label}</span>
+            </a>
+          </li>
         ))}
-        <li>
-          <a href={pdfHref} target="_blank" rel="noopener" class="drawer__pdf">
-            PDF půdorys
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        </li>
-      </ul>
+      </ol>
+
+      <a href={pdfHref} target="_blank" rel="noopener" class="drawer__pdf">
+        <span>PDF půdorys</span>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
     </nav>
 
     <footer class="drawer__foot">
-      <div class="drawer__logo">INVBUILD</div>
+      <span class="drawer__logo">INVBUILD</span>
       <dl>
-        <div><dt>IČ:</dt><dd>{ico}</dd></div>
-        <div><dt>Tel:</dt><dd><a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a></dd></div>
-        <div><dt>E-mail:</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>
-        <div><dt></dt><dd>{address}</dd></div>
+        <div><dt>IČ</dt><dd>{ico}</dd></div>
+        <div><dt>Telefon</dt><dd><a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a></dd></div>
+        <div><dt>E-mail</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>
+        <div><dt>Adresa</dt><dd>{address}</dd></div>
       </dl>
       <a href="https://invbuild.cz" target="_blank" rel="noopener" class="drawer__site-link">
-        INV Build oficiální →
+        Hlavní web INVBUILD →
       </a>
     </footer>
   </div>
@@ -83,25 +90,28 @@ const {
     position: fixed;
     inset: 0 0 auto 0;
     z-index: var(--z-sticky);
-    padding: clamp(1rem, 2vw, 1.5rem);
+    padding: clamp(1.25rem, 2.5vw, 2rem);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    pointer-events: none;          /* let scrolling pass through gaps */
+    pointer-events: none;
   }
   .topbar > * { pointer-events: auto; }
 
-  /* ---- Chci poptat ---- */
+  /* Chci poptat */
   .topbar__cta {
     display: inline-flex;
     align-items: center;
+    gap: 0.5rem;
     padding: 0.85rem 1.5rem;
     background: var(--accent);
     color: var(--accent-ink);
     font-size: var(--fs-sm);
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: 0.02em;
     border-radius: var(--radius-pill);
-    box-shadow: 0 8px 24px rgba(224, 163, 43, 0.35);
+    box-shadow: 0 14px 32px rgba(217, 152, 33, 0.32),
+                0 4px 10px rgba(217, 152, 33, 0.18);
     transition: transform var(--dur-fast) var(--ease-out),
                 background var(--dur-fast) var(--ease-out);
   }
@@ -109,8 +119,12 @@ const {
     background: var(--accent-hover);
     transform: translateY(-1px);
   }
+  .topbar__cta svg {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .topbar__cta:hover svg { transform: translate(2px, -2px); }
 
-  /* ---- hamburger ---- */
+  /* hamburger */
   .topbar__menu-btn {
     width: 52px; height: 52px;
     display: grid; place-items: center;
@@ -118,11 +132,22 @@ const {
     color: var(--ink);
     border-radius: 50%;
     box-shadow: var(--shadow-md);
-    transition: background var(--dur-fast) var(--ease-out);
+    transition: background var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+    position: relative;
   }
-  .topbar__menu-btn:hover { background: var(--paper-soft); }
+  .topbar__menu-btn:hover { background: var(--paper-bone); transform: scale(1.04); }
+  .topbar__menu-line {
+    position: absolute;
+    width: 18px;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 1px;
+  }
+  .topbar__menu-line:nth-child(1) { top: 22px; }
+  .topbar__menu-line:nth-child(2) { bottom: 22px; }
 
-  /* ---- drawer ---- */
+  /* drawer */
   .drawer {
     position: fixed;
     inset: 0;
@@ -134,7 +159,7 @@ const {
 
   .drawer__backdrop {
     position: absolute; inset: 0;
-    background: rgba(10, 10, 10, 0.55);
+    background: rgba(20, 17, 12, 0.55);
     opacity: 0;
     transition: opacity var(--dur-base) var(--ease-out);
   }
@@ -143,9 +168,9 @@ const {
   .drawer__panel {
     position: absolute;
     inset: 0 0 0 auto;
-    width: min(420px, 90vw);
+    width: min(460px, 92vw);
     background: var(--paper);
-    padding: clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(1.75rem, 3vw, 2.5rem);
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
@@ -159,70 +184,115 @@ const {
     width: 44px; height: 44px;
     display: grid; place-items: center;
     border-radius: 50%;
-    color: var(--accent);
+    color: var(--ink);
     transition: background var(--dur-fast) var(--ease-out);
   }
-  .drawer__close:hover { background: var(--paper-soft); }
+  .drawer__close:hover { background: var(--paper-bone); }
 
   .drawer__nav {
     flex: 1;
-    margin-top: clamp(1.5rem, 4vw, 3rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
-  .drawer__nav ul { display: flex; flex-direction: column; gap: 0.25rem; }
-  .drawer__nav a {
-    display: block;
-    padding: 0.85rem 0;
-    font-size: var(--fs-lg);
-    font-weight: 500;
-    color: var(--ink);
+  .drawer__nav ol {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    list-style: none;
+    padding: 0;
+  }
+  .drawer__nav ol a {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.9rem 0;
     border-bottom: 1px solid var(--line);
-    transition: color var(--dur-fast) var(--ease-out), padding-left var(--dur-fast) var(--ease-out);
+    transition: padding-left var(--dur-base) var(--ease-out);
   }
-  .drawer__nav a:hover { color: var(--accent); padding-left: 0.5rem; }
+  .drawer__nav ol a:hover { padding-left: 0.5rem; }
+  .drawer__num {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--accent);
+  }
+  .drawer__label {
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 400;
+    letter-spacing: var(--tracking-tight);
+    color: var(--ink);
+    font-variation-settings: 'opsz' 60, 'SOFT' 50;
+  }
+  .drawer__nav ol a:hover .drawer__label { color: var(--accent-ink); }
 
   .drawer__pdf {
-    display: flex !important;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    color: var(--accent) !important;
+    gap: 0.5rem;
+    align-self: flex-start;
+    padding: 0.8rem 1.4rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-sm);
+    transition: background var(--dur-fast) var(--ease-out);
   }
+  .drawer__pdf:hover { background: var(--accent); color: var(--accent-ink); }
 
   .drawer__foot {
     margin-top: 2rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--line);
-    text-align: center;
   }
   .drawer__logo {
     font-family: var(--font-display);
     font-size: var(--fs-xl);
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    font-weight: 400;
+    letter-spacing: 0.04em;
     color: var(--accent);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
+    display: block;
+    font-variation-settings: 'opsz' 60, 'SOFT' 30;
   }
   .drawer__foot dl {
     font-size: var(--fs-sm);
     color: var(--muted);
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    display: grid;
+    gap: 0.4rem;
   }
-  .drawer__foot dl > div { display: flex; justify-content: center; gap: 0.4rem; }
-  .drawer__foot dl dt { font-weight: 500; color: var(--ink); }
-  .drawer__foot dl a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .drawer__foot dl > div {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0.6rem;
+  }
+  .drawer__foot dl dt {
+    text-transform: uppercase;
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--muted-soft);
+  }
+  .drawer__foot dl dd { color: var(--ink); }
+  .drawer__foot dl a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--accent);
+  }
   .drawer__site-link {
     display: inline-block;
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     font-size: var(--fs-sm);
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 4px;
   }
+  .drawer__site-link:hover { color: var(--accent-hover); }
 </style>
 
 <script>
-  // Drawer open/close + Esc + outside click
   const openBtn  = document.querySelector<HTMLButtonElement>('[data-menu-open]');
   const drawer   = document.getElementById('drawer');
   const closers  = document.querySelectorAll<HTMLElement>('[data-menu-close], [data-menu-close-link]');

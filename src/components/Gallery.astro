@@ -1,5 +1,5 @@
 ---
-// Gallery — velký obrázek + thumbnail strip + šipky (jak v původním Wixu)
+// Gallery — large primary image, refined thumbnail strip, lighter chrome, magazine caption
 export interface Props {
   images: { src: string; alt: string }[];
 }
@@ -15,15 +15,24 @@ const { images } = Astro.props;
     ))}
 
     <button class="gallery__arrow gallery__arrow--prev" aria-label="Předchozí" data-gal-prev>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
     <button class="gallery__arrow gallery__arrow--next" aria-label="Další" data-gal-next>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
+  </div>
+
+  <div class="gallery__meta">
+    <span class="gallery__caption" data-gal-caption>{images[0].alt}</span>
+    <span class="gallery__counter">
+      <span data-gal-current>01</span>
+      <span class="gallery__counter-sep">/</span>
+      <span>{String(images.length).padStart(2, '0')}</span>
+    </span>
   </div>
 
   <div class="gallery__thumbs" role="list">
@@ -40,19 +49,22 @@ const { images } = Astro.props;
 </div>
 
 <style>
-  .gallery { display: grid; gap: 1rem; }
+  .gallery {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
 
   .gallery__stage {
     position: relative;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 10;
     background: var(--ink-soft);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
   .gallery__main {
     position: absolute; inset: 0;
     opacity: 0;
-    transition: opacity 350ms var(--ease-out);
+    transition: opacity 450ms var(--ease-out);
   }
   .gallery__main[data-active='true'] { opacity: 1; }
   .gallery__main img { width: 100%; height: 100%; object-fit: cover; }
@@ -60,18 +72,52 @@ const { images } = Astro.props;
   .gallery__arrow {
     position: absolute;
     top: 50%; transform: translateY(-50%);
-    width: 48px; height: 48px;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    background: rgba(10,10,10,0.55);
-    color: var(--paper);
+    background: rgba(250,250,247,0.92);
+    color: var(--ink);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: grid; place-items: center;
     z-index: 2;
-    transition: background var(--dur-fast) var(--ease-out);
+    transition: transform var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out);
+    opacity: 0;
   }
-  .gallery__arrow:hover { background: rgba(10,10,10,0.85); }
-  .gallery__arrow--prev { left: 0.75rem; }
-  .gallery__arrow--next { right: 0.75rem; }
+  .gallery__stage:hover .gallery__arrow,
+  .gallery__arrow:focus-visible { opacity: 1; }
+  .gallery__arrow:hover { background: var(--paper); transform: translateY(-50%) scale(1.05); }
+  .gallery__arrow--prev { left: clamp(0.6rem, 1.5vw, 1.25rem); }
+  .gallery__arrow--next { right: clamp(0.6rem, 1.5vw, 1.25rem); }
 
+  /* meta row — caption + counter */
+  .gallery__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+  .gallery__caption {
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    font-style: italic;
+  }
+  .gallery__counter {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--muted-soft);
+    display: flex; gap: 0.35rem;
+  }
+  .gallery__counter-sep { opacity: 0.5; }
+
+  /* dark section: invert caption colors */
+  :global(.section--dark) .gallery__caption { color: rgba(255,255,255,0.65); }
+  :global(.section--dark) .gallery__counter { color: rgba(255,255,255,0.5); }
+
+  /* thumbs */
   .gallery__thumbs {
     display: flex;
     gap: 0.5rem;
@@ -81,22 +127,22 @@ const { images } = Astro.props;
     scrollbar-width: thin;
   }
   .gallery__thumb {
-    flex: 0 0 clamp(110px, 14vw, 160px);
-    aspect-ratio: 16 / 11;
-    border-radius: var(--radius-md);
+    flex: 0 0 clamp(96px, 11vw, 132px);
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     scroll-snap-align: start;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     transition: border-color var(--dur-fast) var(--ease-out),
-                transform var(--dur-fast) var(--ease-out);
-    opacity: 0.7;
+                opacity var(--dur-fast) var(--ease-out);
+    opacity: 0.55;
   }
   .gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
   .gallery__thumb[data-active='true'] {
     border-color: var(--accent);
     opacity: 1;
   }
-  .gallery__thumb:hover { opacity: 1; transform: translateY(-2px); }
+  .gallery__thumb:hover { opacity: 1; }
 </style>
 
 <script>
@@ -104,6 +150,8 @@ const { images } = Astro.props;
   if (gallery) {
     const slides = Array.from(gallery.querySelectorAll<HTMLElement>('.gallery__main'));
     const thumbs = Array.from(gallery.querySelectorAll<HTMLButtonElement>('.gallery__thumb'));
+    const caption = gallery.querySelector<HTMLElement>('[data-gal-caption]');
+    const counter = gallery.querySelector<HTMLElement>('[data-gal-current]');
     let idx = 0;
 
     function go(next: number) {
@@ -112,13 +160,14 @@ const { images } = Astro.props;
       idx = (next + slides.length) % slides.length;
       slides[idx].dataset.active = 'true';
       thumbs[idx].dataset.active = 'true';
-      thumbs[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      const alt = slides[idx].querySelector('img')?.alt ?? '';
+      if (caption) caption.textContent = alt;
+      if (counter) counter.textContent = String(idx + 1).padStart(2, '0');
+      thumbs[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
     gallery.querySelector('[data-gal-prev]')?.addEventListener('click', () => go(idx - 1));
     gallery.querySelector('[data-gal-next]')?.addEventListener('click', () => go(idx + 1));
     thumbs.forEach((t) => t.addEventListener('click', () => go(Number(t.dataset.go))));
-
-    // keyboard
     gallery.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft')  go(idx - 1);
       if (e.key === 'ArrowRight') go(idx + 1);

@@ -1,0 +1,26 @@
+---
+// Reveal — globální scroll-reveal client script. Vloží se jednou do <Layout>.
+// IntersectionObserver přidá `data-revealed="true"` všem prvkům s `data-reveal`.
+---
+
+<script>
+  // Single observer for all reveal targets on the page
+  const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+  if ('IntersectionObserver' in window && targets.length) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).dataset.revealed = 'true';
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
+    );
+    targets.forEach((t) => io.observe(t));
+  } else {
+    // Fallback: just show everything
+    targets.forEach((t) => (t.dataset.revealed = 'true'));
+  }
+</script>

@@ -9,29 +9,27 @@ import Lokalita    from '../components/Lokalita.astro';
 import Services    from '../components/Services.astro';
 import Kontakt     from '../components/Kontakt.astro';
 import Footer      from '../components/Footer.astro';
+import Reveal      from '../components/Reveal.astro';
 
 // ----- HERO -----
 const stats = [
-  { label: 'Rozloha projektu', value: '480 m²' },
-  { label: 'Užitá plocha',     value: '159 m²' },
-  { label: 'Dispozice',         value: '5+1'    },
-  { label: 'Cena',              value: '31 900 000,-' },
+  { label: 'Rozloha pozemku', value: '480 m²' },
+  { label: 'Užitná plocha',   value: '159 m²' },
+  { label: 'Dispozice',        value: '5+1'    },
+  { label: 'Cena',             value: '31 900 000 Kč' },
 ];
 
-// Hero carousel — 3 nejlepší exteriérové vizualizace
 const heroImages = [
   { src: '/img/mnichovice-01.webp', alt: 'Rodinný dům Mnichovice — pohled z ulice' },
   { src: '/img/mnichovice-05.webp', alt: 'Rodinný dům Mnichovice — boční pohled' },
   { src: '/img/mnichovice-07.webp', alt: 'Rodinný dům Mnichovice — exteriér s terasou' },
 ];
 
-// ----- GALERIE -----
 const galleryImages = Array.from({ length: 16 }, (_, i) => {
   const n = String(i + 1).padStart(2, '0');
   return { src: `/img/mnichovice-${n}.webp`, alt: `Vizualizace ${i + 1} — Rodinný dům Mnichovice` };
 });
 
-// ----- LOKALITA / BUDOVA accordion -----
 const locGroups = [
   {
     id: '1np',
@@ -90,106 +88,128 @@ const locGroups = [
   },
 ];
 
-// ----- SLUŽBY -----
 const serviceCards = [
-  { image: { src: '/img/mnichovice-11.webp', alt: 'Moderní koupelna' } },
-  { image: { src: '/img/mnichovice-13.webp', alt: 'Ložnice s designovým osvětlením' } },
-  { image: { src: '/img/mnichovice-04.webp', alt: 'Otevřený obývací prostor s krbem' } },
+  { title: 'Designové koupelny', image: { src: '/img/mnichovice-11.webp', alt: 'Moderní koupelna s černou armaturou' } },
+  { title: 'Ložnice s charakterem', image: { src: '/img/mnichovice-13.webp', alt: 'Ložnice s designovým osvětlením' } },
+  { title: 'Otevřené obytné prostory', image: { src: '/img/mnichovice-04.webp', alt: 'Otevřený obývací prostor s krbem' } },
 ];
 ---
 
 <Layout
   title="Rodinný dům Mnichovice — 5+1 · 159 m² · INVBUILD"
-  description="Nová kompletní rekonstrukce rodinného domu v Mnichovicích, 15 minut od Prahy. 5+1, 159 m² užitné plochy, pozemek 480 m². Cena 31 900 000 Kč. Prodává INVBUILD."
+  description="Kompletní rekonstrukce rodinného domu v Mnichovicích, 15 minut od Prahy. 5+1, 159 m² užitné plochy, pozemek 480 m². Cena 31 900 000 Kč. Prodává INVBUILD."
 >
   <Header />
 
-  <!-- HERO ============================================================== -->
-  <Hero title="Rodinný dům Mnichovice" stats={stats} images={heroImages} />
+  <!-- HERO -->
+  <Hero
+    title="Rodinný dům Mnichovice"
+    location="Mnichovice · Praha-východ"
+    stats={stats}
+    images={heroImages}
+  />
 
-  <!-- GALERIE =========================================================== -->
-  <Section id="galerie" variant="dark" eyebrow="Galerie projektu" title="Prohlédněte si interaktivní galerii developerského projektu v Mnichovicích.">
+  <!-- 01 — GALERIE -->
+  <Section
+    id="galerie"
+    variant="dark"
+    num="01"
+    eyebrow="Galerie projektu"
+    title="Pojďte se podívat dovnitř."
+    intro="Šestnáct vizualizací — exteriér, interiér i detail. Plánujeme každý pokoj, každý průhled, každé světlo."
+  >
     <Gallery images={galleryImages} />
   </Section>
 
-  <!-- MNICHOVICE ======================================================== -->
-  <Section id="mnichovice">
+  <!-- 02 — MNICHOVICE -->
+  <Section id="mnichovice" variant="bone">
     <StorySplit
+      num="02"
       eyebrow="O projektu"
       title="Mnichovice"
+      caption="Vizualizace 12 — Jídelna"
       image={{ src: '/img/mnichovice-12.webp', alt: 'Jídelna v rodinném domě Mnichovice' }}
     >
       <p>
-        Aktuálně přinášíme informace ohledně našeho developerského projektu —
-        kompletní rekonstrukce rodinného domu se zahradou, v obci
-        <strong>Mnichovice</strong>, situované východně od Prahy, 15 minut od
-        Westfield Chodov.
+        Přinášíme kompletní rekonstrukci rodinného domu se zahradou v obci
+        <strong>Mnichovice</strong>, situované východně od Prahy — patnáct minut
+        od Westfield Chodov.
       </p>
       <p>
-        Projekt je zasazený do venkovského stylu s moderními prvky architektury,
-        který nabídne novým majitelům také letní / zimní zahradu, celé volné
-        patro k využití nad garáží a hlavně dostatek soukromí.
+        Projekt je zasazený do venkovského stylu s moderními prvky architektury.
+        Nabídne novým majitelům letní i zimní zahradu, celé volné patro k využití
+        nad garáží a hlavně dostatek soukromí.
       </p>
     </StorySplit>
   </Section>
 
-  <!-- REKONSTRUKCE ====================================================== -->
+  <!-- 03 — REKONSTRUKCE -->
   <Section id="rekonstrukce" variant="dark">
     <StorySplit
       variant="dark"
       reverse
+      num="03"
       eyebrow="Stavba"
       title="Rekonstrukce"
+      caption="Vizualizace 09 — Ložnice"
       image={{ src: '/img/mnichovice-09.webp', alt: 'Moderní interiér ložnice' }}
     >
       <p>
-        Prodejní cena po dokončení rekonstrukce, která <strong>začala 8. ledna 2024</strong>
-        a předpokládá se její <strong>dokončení koncem roku 2024 / začátek roku 2025</strong>.
-        Nové dispoziční řešení nově zrekonstruovaného domu bude <strong>5+1</strong>
-        včetně technické místnosti, vstupní haly, šatny a terasy. Užitá plocha
-        domu bez pozemku bude takto činit <strong>159 m²</strong>.
+        Prodejní cena platí po dokončení rekonstrukce, která <strong>začala
+        8. ledna 2024</strong> a předpokládá se její <strong>dokončení koncem
+        roku 2024 / začátkem roku 2025</strong>.
+      </p>
+      <p>
+        Nové dispoziční řešení bude <strong>5+1</strong> včetně technické místnosti,
+        vstupní haly, šatny a terasy. Užitná plocha domu bez pozemku bude
+        činit <strong>159 m²</strong>.
       </p>
       <p>
         V rámci celkové rekonstrukce vznikne také zastřešená garáž, která
-        v horním patře nabídne možnost pro pokoj pro hosty či pánský klub,
-        cokoliv si nový majitel bude přát. Přístavba samotné jídelny umožní
-        krásný výhled přímo z domu na zahradu a díky tomu vznik terasy
+        v horním patře nabídne pokoj pro hosty či pánský klub. Přístavba
+        jídelny umožní krásný výhled přímo z domu na zahradu a vznik terasy
         v horním patře s přístupem k ložnici.
       </p>
       <p>
-        Další velké plus je <strong>letní / zimní zahrada (kuchyň)</strong>, která
-        nabídne příjemně strávené chvíle s rodinou či přáteli, nehledě
-        na počasí.
+        Bonusem je <strong>letní / zimní zahrada (kuchyň)</strong>, která nabídne
+        příjemné chvíle s rodinou či přáteli, nehledě na počasí.
       </p>
     </StorySplit>
   </Section>
 
-  <!-- DISPOZICE ========================================================= -->
+  <!-- 04 — DISPOZICE -->
   <Section id="dispozice">
     <StorySplit
+      num="04"
       eyebrow="Dispozice"
-      title="Dispozice"
+      title="Pět plus jedna."
+      caption="Vizualizace 02 — Pohled na dům"
       image={{ src: '/img/mnichovice-02.webp', alt: 'Pohled na dům s prosklenou fasádou a zahradou' }}
     >
       <p>
-        Rodinný dům nabídne dispozici <strong>5+1 či možné 6+1</strong>, se zvýšeným
-        důrazem na moderní prvky a luxusní vybavení, které respektuje
-        venkovský styl a přitom klade velký důraz na spojení s přírodou
-        — včetně prosklených prvků a přímých vstupů z obývacího pokoje,
-        kuchyně a jídelny do zahrady.
+        Rodinný dům nabídne dispozici <strong>5+1, případně 6+1</strong>,
+        se zvýšeným důrazem na moderní prvky a luxusní vybavení. Respektuje
+        venkovský styl a přitom klade velký důraz na spojení s přírodou —
+        prosklené prvky a přímé vstupy z obývacího pokoje, kuchyně a jídelny
+        vedou do zahrady.
       </p>
       <p>
-        Součástí dalšího užití potenciálu celé nemovitosti je zmiňovaná velká
-        garáž s horním patrem a letní / zimní zahrada.
+        Součástí potenciálu nemovitosti je velká garáž s horním patrem
+        a letní / zimní zahrada.
       </p>
     </StorySplit>
   </Section>
 
-  <!-- SEZNÁMENÍ S BUDOVOU A LOKALITA ==================================== -->
-  <Section id="lokalita" variant="dark" eyebrow="Mapa a detail" title="Seznámení s budovou a lokalita" align="center">
-    <p class="lokalita__intro">
-      Zjistěte dodatečné informace o lokalitě a okolí nemovitosti.
-    </p>
+  <!-- 05 — LOKALITA / SEZNÁMENÍ S BUDOVOU -->
+  <Section
+    id="lokalita"
+    variant="dark"
+    num="05"
+    eyebrow="Mapa a detail"
+    title="Seznámení s budovou."
+    intro="Detail místností po podlažích, technické vybavení a co je v dosahu pěti minut."
+    width="wide"
+  >
     <Lokalita
       address="Mnichovice, okres Praha-východ"
       coordinates="49.9300,14.7011"
@@ -197,29 +217,31 @@ const serviceCards = [
     />
   </Section>
 
-  <!-- SLUŽBY ============================================================ -->
-  <Section id="sluzby" eyebrow="Doplňkové" title="Naše ostatní služby" align="center">
+  <!-- 06 — SLUŽBY -->
+  <Section
+    id="sluzby"
+    variant="bone"
+    num="06"
+    eyebrow="Doplňkové"
+    title="Naše ostatní služby."
+    intro="Jdeme za hranice prodeje. Od stavby přes interiér až po hypotéku."
+    align="center"
+  >
     <Services items={serviceCards} />
   </Section>
 
-  <!-- KONTAKT =========================================================== -->
-  <Section id="kontakt" variant="soft" eyebrow="Kontakt" title="Zajímá Vás více?" align="center">
+  <!-- 07 — KONTAKT -->
+  <Section
+    id="kontakt"
+    num="07"
+    eyebrow="Kontakt"
+    title="Zajímá Vás více?"
+    align="center"
+  >
     <Kontakt />
   </Section>
 
   <Footer />
+
+  <Reveal />
 </Layout>
-
-<style>
-  .lokalita__intro {
-    text-align: center;
-    color: rgba(255,255,255,0.75);
-    margin-top: -1rem;
-    margin-bottom: 2.5rem;
-    font-size: var(--fs-base);
-  }
-
-  /* Dark sections inherit white headings */
-  :global(.section--dark) :global(.section__title) { color: var(--paper); }
-  :global(.section--dark) :global(.eyebrow) { color: var(--accent); }
-</style>

@@ -1,100 +1,111 @@
 /* ============================================================
    INVBUILD — Design Tokens (sdílené napříč všemi weby značky)
-   ============================================================
-   Tato vrstva definuje barvy, typografii, spacing a radii.
-   Konkrétní weby (Mnichovice, Lisovice, Vejprty) ji importují
-   a případně přepisují akcenty.
+   Editorial / architecture magazine aesthetic.
 ============================================================ */
 
 :root {
-  /* ---------- COLOR — neutral palette ---------- */
-  --ink: #0a0a0a;            /* near-black, primary text & dark surfaces */
-  --ink-soft: #1a1a1a;        /* hover / cards on dark */
-  --paper: #ffffff;           /* primary light surface */
-  --paper-soft: #f7f6f3;      /* warm off-white — sections */
-  --paper-warm: #efece5;      /* mírně teplejší pozadí — accent panels */
-  --line: #e4e2dc;            /* borders / dividers */
-  --line-strong: #cfccc4;
-  --muted: #6b6b67;           /* secondary text */
-  --muted-soft: #9a9a95;      /* tertiary / captions */
+  /* ---------- COLOR — warm neutral palette ---------- */
+  /* Use warm charcoals instead of pure black, cream papers instead of pure white */
+  --ink:        #14110c;  /* warm charcoal — primary text & dark surfaces */
+  --ink-soft:   #221e17;  /* hover / cards on dark */
+  --ink-muted:  #4a443a;  /* secondary on dark */
 
-  /* ---------- COLOR — accent (INVBUILD identity) ---------- */
-  /* Saturated marigold yellow — vychází z aktuálního Wix designu. */
-  --accent: #e0a32b;
-  --accent-hover: #c98e1d;
-  --accent-soft: #f0c66b;
-  --accent-ink: #2a1d05;        /* dark ink for use on yellow backgrounds */
-  --accent-panel: #d99821;      /* slightly darker for accordion panels */
+  --paper:      #fafaf7;  /* warm off-white — primary surface */
+  --paper-bone: #f1eee5;  /* bone — soft section bg */
+  --paper-cream:#e7e1cf;  /* deeper cream — accent panels */
+  --line:       #d9d4c4;  /* hairline borders */
+  --line-strong:#a8a294;
+
+  --muted:      #6e6759;  /* secondary text on light */
+  --muted-soft: #908976;  /* tertiary / captions */
+
+  /* ---------- COLOR — accent (used SPARINGLY — CTAs + small details) ---------- */
+  --accent:        #d99821;  /* sytá marigold žlutá */
+  --accent-hover:  #b9801a;
+  --accent-soft:   #f0c66b;
+  --accent-ink:    #2a1d05;  /* dark ink na žluté */
 
   /* ---------- TYPOGRAPHY ---------- */
-  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system,
-               'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Inter Variable', 'Inter', system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans:    'Inter Variable', 'Inter', system-ui, -apple-system,
+                  'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
 
-  /* fluid type scale — clamp(min, ideal vw, max) */
-  --fs-xs:   clamp(0.78rem, 0.74rem + 0.2vw, 0.85rem);
-  --fs-sm:   clamp(0.88rem, 0.82rem + 0.3vw, 0.95rem);
-  --fs-base: clamp(1rem, 0.94rem + 0.3vw, 1.075rem);
-  --fs-lg:   clamp(1.15rem, 1.05rem + 0.5vw, 1.3rem);
-  --fs-xl:   clamp(1.4rem, 1.2rem + 1vw, 1.75rem);
-  --fs-2xl:  clamp(1.9rem, 1.5rem + 2vw, 2.6rem);
-  --fs-3xl:  clamp(2.6rem, 2rem + 3vw, 3.8rem);
-  --fs-display: clamp(3rem, 2.4rem + 4.5vw, 6rem);
+  /* Editorial type scale — pushed larger, more dramatic */
+  --fs-xs:      clamp(0.74rem, 0.7rem + 0.2vw, 0.8rem);
+  --fs-sm:      clamp(0.85rem, 0.8rem + 0.25vw, 0.92rem);
+  --fs-base:    clamp(1rem, 0.95rem + 0.25vw, 1.075rem);
+  --fs-lg:      clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+  --fs-xl:      clamp(1.45rem, 1.2rem + 1.2vw, 1.95rem);
+  --fs-2xl:     clamp(2rem, 1.5rem + 2.5vw, 3.2rem);
+  --fs-3xl:     clamp(2.8rem, 2rem + 4vw, 5rem);
+  --fs-display: clamp(3.5rem, 2.5rem + 6vw, 8.5rem);
+  --fs-mega:    clamp(4.5rem, 3rem + 9vw, 12rem);
 
-  --lh-tight: 1.05;
-  --lh-snug:  1.2;
-  --lh-base:  1.55;
-  --lh-loose: 1.75;
+  --lh-tight:   1.02;
+  --lh-snug:    1.15;
+  --lh-base:    1.6;
+  --lh-loose:   1.75;
 
-  --tracking-tight: -0.02em;
-  --tracking-base:  -0.005em;
-  --tracking-wide:  0.08em;
+  --tracking-tightest: -0.04em;
+  --tracking-tight:    -0.02em;
+  --tracking-base:     -0.005em;
+  --tracking-wide:     0.12em;
+  --tracking-extra:    0.22em;
 
-  /* ---------- SPACING ---------- */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 6rem;
-  --space-10: 8rem;
+  /* ---------- SPACING — generous editorial rhythm ---------- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-7:  3rem;
+  --space-8:  4rem;
+  --space-9:  6rem;
+  --space-10: 9rem;
   --space-11: 12rem;
+  --space-12: 16rem;
 
-  /* layout */
-  --container-max: 1320px;
-  --container-narrow: 880px;
-  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  /* Section vertical rhythm — much more air than typical sites */
+  --pad-section: clamp(6rem, 11vw, 12rem);
+  --pad-section-tight: clamp(4rem, 7vw, 7rem);
+
+  --container-max:    1440px;   /* wider — gives image room to breathe */
+  --container-default:1280px;
+  --container-narrow: 760px;    /* prose */
+  --gutter:           clamp(1.25rem, 5vw, 3rem);
 
   /* ---------- RADII ---------- */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
-  --radius-xl: 28px;
+  --radius-sm:   4px;
+  --radius-md:   10px;
+  --radius-lg:   18px;
+  --radius-xl:   32px;
   --radius-pill: 999px;
 
   /* ---------- SHADOWS ---------- */
-  --shadow-sm: 0 1px 2px rgba(10, 10, 10, 0.04), 0 1px 1px rgba(10, 10, 10, 0.03);
-  --shadow-md: 0 8px 24px rgba(10, 10, 10, 0.06), 0 2px 6px rgba(10, 10, 10, 0.04);
-  --shadow-lg: 0 20px 48px rgba(10, 10, 10, 0.12), 0 6px 16px rgba(10, 10, 10, 0.06);
-  --shadow-ink: 0 24px 60px rgba(10, 10, 10, 0.28);
+  --shadow-sm:  0 1px 2px rgba(20, 17, 12, 0.05),
+                0 1px 1px rgba(20, 17, 12, 0.03);
+  --shadow-md:  0 12px 28px rgba(20, 17, 12, 0.08),
+                0 3px 8px rgba(20, 17, 12, 0.04);
+  --shadow-lg:  0 28px 60px rgba(20, 17, 12, 0.16),
+                0 10px 22px rgba(20, 17, 12, 0.08);
+  --shadow-ink: 0 28px 72px rgba(20, 17, 12, 0.35);
 
   /* ---------- MOTION ---------- */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-fast: 160ms;
-  --dur-base: 280ms;
-  --dur-slow: 520ms;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 620ms;
 
   /* ---------- Z-INDEX ---------- */
-  --z-base: 1;
-  --z-sticky: 50;
+  --z-base:    1;
+  --z-sticky:  50;
   --z-overlay: 80;
-  --z-modal: 100;
-  --z-toast: 120;
+  --z-modal:  100;
+  --z-toast:  120;
 }
 
 @media (prefers-reduced-motion: reduce) {

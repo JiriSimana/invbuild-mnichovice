@@ -3,19 +3,30 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="container footer__inner">
-    <div class="footer__brand">
-      <span class="footer__logo">INVBUILD</span>
-      <span class="footer__tagline">Realizujeme vize ve skutečnost.</span>
+  <div class="container container--wide">
+    <div class="footer__top">
+      <div>
+        <span class="footer__logo">INVBUILD</span>
+        <p class="footer__tagline">Realizujeme vize ve skutečnost.</p>
+      </div>
+      <div class="footer__nav">
+        <a href="#hero">Domů</a>
+        <a href="#galerie">Galerie</a>
+        <a href="#mnichovice">O projektu</a>
+        <a href="#lokalita">Lokalita</a>
+        <a href="#kontakt">Kontakt</a>
+      </div>
     </div>
-    <div class="footer__meta">
+
+    <hr class="hairline" />
+
+    <div class="footer__bottom">
       <span>© {year} Invbuild Group a.s. · IČ 11632046</span>
-      <span>·</span>
-      <a href="/gdpr">GDPR</a>
-      <span>·</span>
-      <a href="/cookies">Cookies</a>
-      <span>·</span>
-      <span>Web: <a href="https://smartcase.cz" target="_blank" rel="noopener">Smartcase Agency</a></span>
+      <span class="footer__meta">
+        <a href="/gdpr">GDPR</a>
+        <a href="/cookies">Cookies</a>
+        <a href="https://smartcase.cz" target="_blank" rel="noopener">Smartcase Agency</a>
+      </span>
     </div>
   </div>
 </footer>
@@ -23,28 +34,58 @@ const year = new Date().getFullYear();
 <style>
   .footer {
     background: var(--ink);
-    color: rgba(255,255,255,0.75);
-    padding-block: 1.75rem;
+    color: rgba(255,255,255,0.7);
+    padding-block: clamp(3rem, 6vw, 5rem) 1.5rem;
     font-size: var(--fs-xs);
   }
-  .footer__inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+  .footer__top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: end;
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  @media (max-width: 720px) {
+    .footer__top { grid-template-columns: 1fr; }
   }
   .footer__logo {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    margin-right: 0.6rem;
+    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--paper);
+    font-variation-settings: 'opsz' 60, 'SOFT' 30;
+    display: block;
   }
-  .footer__tagline { opacity: 0.7; }
+  .footer__tagline {
+    margin-top: 0.4rem;
+    opacity: 0.6;
+    font-size: var(--fs-sm);
+  }
+  .footer__nav {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    flex-wrap: wrap;
+    font-size: var(--fs-sm);
+  }
+  .footer__nav a {
+    color: rgba(255,255,255,0.75);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .footer__nav a:hover { color: var(--accent); }
+
+  .footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    flex-wrap: wrap;
+    opacity: 0.55;
+    letter-spacing: 0.02em;
+  }
   .footer__meta {
-    display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+    display: flex; gap: 1rem; flex-wrap: wrap;
   }
-  .footer__meta a { text-decoration: underline; text-underline-offset: 3px; }
-  .footer__meta a:hover { color: var(--accent); }
+  .footer__meta a { text-decoration: underline; text-underline-offset: 3px; transition: color var(--dur-fast) var(--ease-out); }
+  .footer__meta a:hover { color: var(--accent); opacity: 1; }
 </style>
