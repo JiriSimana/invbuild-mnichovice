@@ -89,13 +89,31 @@ const locGroups = [
   },
 ];
 
-const serviceCards = [
-  { title: 'Designové koupelny',         image: { src: '/img/mnichovice-11.webp', alt: 'Moderní koupelna s černou armaturou' } },
-  { title: 'Ložnice s charakterem',      image: { src: '/img/mnichovice-13.webp', alt: 'Ložnice s designovým osvětlením' } },
-  { title: 'Otevřené obytné prostory',   image: { src: '/img/mnichovice-04.webp', alt: 'Otevřený obývací prostor s krbem' } },
+// Gateway cards — odkazy na hlavní INVBUILD web
+const gatewayCards = [
+  {
+    title: 'Naše projekty',
+    blurb: 'Další developerské projekty od INVBUILD — nízkoenergetické stavby i rekonstrukce.',
+    image: { src: '/img/mnichovice-08.webp', alt: 'Developerský projekt INVBUILD' },
+    href: 'https://invbuild.cz/projekty',
+    external: true,
+  },
+  {
+    title: 'Reality v nabídce',
+    blurb: 'Prodej i pronájem nemovitostí s profesionálním a lidským přístupem.',
+    image: { src: '/img/mnichovice-15.webp', alt: 'Reality INVBUILD' },
+    href: 'https://invbuild.cz/reality',
+    external: true,
+  },
+  {
+    title: 'Naše služby',
+    blurb: 'Hypotéka, odhad, pojištění, právní servis, foto/video, VR prohlídky.',
+    image: { src: '/img/mnichovice-04.webp', alt: 'Služby INVBUILD' },
+    href: 'https://invbuild.cz',
+    external: true,
+  },
 ];
 
-// Section nav — pravý scrollspy
 const navItems = [
   { id: 'hero',         label: 'Úvod' },
   { id: 'galerie',      label: 'Galerie' },
@@ -103,7 +121,7 @@ const navItems = [
   { id: 'rekonstrukce', label: 'Rekonstrukce' },
   { id: 'dispozice',    label: 'Dispozice' },
   { id: 'lokalita',     label: 'Lokalita' },
-  { id: 'sluzby',       label: 'Služby' },
+  { id: 'invbuild',     label: 'INVBUILD' },
   { id: 'kontakt',      label: 'Kontakt' },
 ];
 ---
@@ -128,7 +146,7 @@ const navItems = [
     variant="dark"
     num="01"
     eyebrow="Galerie projektu"
-    title="Pojďte se podívat dovnitř."
+    title="Podívejte se dovnitř."
     intro="Šestnáct vizualizací — exteriér, interiér i detail. Plánujeme každý pokoj, každý průhled, každé světlo."
   >
     <Gallery images={galleryImages} />
@@ -153,6 +171,9 @@ const navItems = [
         Nabídne novým majitelům letní i zimní zahradu, celé volné patro
         nad garáží a hlavně dostatek soukromí.
       </p>
+      <p class="split__cta-wrap">
+        <a href="#galerie" class="btn btn--ink">Prohlédnout galerii</a>
+      </p>
     </StorySplit>
   </Section>
 
@@ -169,8 +190,8 @@ const navItems = [
     >
       <p>
         Prodejní cena platí po dokončení rekonstrukce, která <strong>začala
-        8. ledna 2024</strong> a předpokládá se její <strong>dokončení koncem
-        roku 2024 / začátkem roku 2025</strong>.
+        8. ledna 2024</strong>. Dokončení se předpokládá <strong>koncem
+        roku 2024 / začátkem 2025</strong>.
       </p>
       <p>
         Nové dispoziční řešení bude <strong>5+1</strong> včetně technické místnosti,
@@ -178,10 +199,12 @@ const navItems = [
         činit <strong>159 m²</strong>.
       </p>
       <p>
-        V rámci celkové rekonstrukce vznikne také zastřešená garáž
-        s pokojem pro hosty v horním patře a přístavba jídelny s výhledem
-        na zahradu. Bonusem je <strong>letní / zimní zahrada (kuchyň)</strong>
-        nezávislá na počasí.
+        V rámci celkové rekonstrukce vznikne zastřešená garáž s pokojem pro hosty
+        v horním patře, přístavba jídelny s výhledem na zahradu a <strong>letní /
+        zimní zahrada (kuchyň)</strong> nezávislá na počasí.
+      </p>
+      <p class="split__cta-wrap">
+        <a href="#kontakt" class="btn btn--accent">Domluvit prohlídku</a>
       </p>
     </StorySplit>
   </Section>
@@ -198,13 +221,18 @@ const navItems = [
       <p>
         Rodinný dům nabídne dispozici <strong>5+1, případně 6+1</strong>,
         se zvýšeným důrazem na moderní prvky a luxusní vybavení. Respektuje
-        venkovský styl a přitom klade velký důraz na spojení s přírodou —
-        prosklené prvky a přímé vstupy z obývacího pokoje, kuchyně a jídelny
-        vedou do zahrady.
+        venkovský styl a klade velký důraz na spojení s přírodou — prosklené
+        prvky a přímé vstupy z obývacího pokoje, kuchyně a jídelny vedou
+        do zahrady.
       </p>
       <p>
         Součástí potenciálu nemovitosti je velká garáž s horním patrem
         a letní / zimní zahrada.
+      </p>
+      <p class="split__cta-wrap">
+        <a href="/dokumenty/pudorys-mnichovice.pdf" target="_blank" rel="noopener" class="btn btn--ink">
+          Stáhnout PDF půdorys
+        </a>
       </p>
     </StorySplit>
   </Section>
@@ -215,7 +243,7 @@ const navItems = [
     variant="dark"
     num="05"
     eyebrow="Mapa a detail"
-    title="Seznámení s budovou."
+    title="Seznámení s budovou"
     intro="Detail místností po podlažích, technické vybavení a co je v dosahu pěti minut."
     width="wide"
   >
@@ -226,17 +254,17 @@ const navItems = [
     />
   </Section>
 
-  <!-- 06 — SLUŽBY -->
+  <!-- 06 — INVBUILD GATEWAY -->
   <Section
-    id="sluzby"
+    id="invbuild"
     variant="bone"
     num="06"
-    eyebrow="Doplňkové"
-    title="Naše ostatní služby."
-    intro="Jdeme za hranice prodeje. Od stavby přes interiér až po hypotéku."
+    eyebrow="Pokračujte"
+    title="Více od INVBUILD"
+    intro="Další projekty, nemovitosti v nabídce a kompletní servis na hlavním webu."
     align="center"
   >
-    <Services items={serviceCards} />
+    <Services items={gatewayCards} />
   </Section>
 
   <!-- 07 — KONTAKT -->
@@ -253,3 +281,10 @@ const navItems = [
   <Footer />
   <Reveal />
 </Layout>
+
+<style is:global>
+  /* Wrapper for inline CTAs inside StorySplit body */
+  .split__body .split__cta-wrap {
+    margin-top: 1.5rem;
+  }
+</style>

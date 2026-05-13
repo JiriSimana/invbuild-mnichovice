@@ -1,5 +1,5 @@
 ---
-// Kontakt — editoriální formulář. Větší prostor, jemnější vstupy, klidnější rytmus.
+// Kontakt — sjednocený formulář bez dělení, čistá vertikální linka
 export interface Props {
   phone?: string;
   altPhone?: string;
@@ -17,16 +17,24 @@ const {
 <div class="kontakt">
   <div class="kontakt__intro" data-reveal>
     <p class="kontakt__lead">
-      V rámci probíhající rekonstrukce má nový potenciální majitel možnosti
-      a velkou výhodu si říct, jaké úpravy či možné změny se dají realizovat
-      dle vlastních přání.
+      V rámci probíhající rekonstrukce má nový majitel velkou výhodu si říct,
+      jaké úpravy či změny se dají realizovat dle vlastních přání.
     </p>
-    <p class="kontakt__alt">
-      Případně nás neváhejte kontaktovat na
-      <a href={`tel:${altPhone.replace(/\s/g, '')}`}>{altPhone}</a>
-      nebo na
-      <a href={`https://${website}`} target="_blank" rel="noopener">{website}</a>.
-    </p>
+    <div class="kontakt__direct">
+      <a href={`tel:${altPhone.replace(/\s/g, '')}`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {altPhone}
+      </a>
+      <a href={`mailto:${email}`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {email}
+      </a>
+    </div>
   </div>
 
   <form class="form" id="poptavka" method="POST" action="/api/poptavka" novalidate data-reveal>
@@ -35,15 +43,14 @@ const {
       <input id="name" name="name" type="text" required autocomplete="name" />
     </div>
 
-    <div class="form__row">
-      <div class="form__field">
-        <label for="phone">Telefon</label>
-        <input id="phone" name="phone" type="tel" required autocomplete="tel" />
-      </div>
-      <div class="form__field">
-        <label for="email">E-mail</label>
-        <input id="email" name="email" type="email" required autocomplete="email" />
-      </div>
+    <div class="form__field">
+      <label for="phone">Telefon</label>
+      <input id="phone" name="phone" type="tel" required autocomplete="tel" />
+    </div>
+
+    <div class="form__field">
+      <label for="email">E-mail</label>
+      <input id="email" name="email" type="email" required autocomplete="email" />
     </div>
 
     <div class="form__field">
@@ -51,58 +58,67 @@ const {
       <textarea id="message" name="message" rows="4" required placeholder="Co byste rádi věděli o projektu?"></textarea>
     </div>
 
-    <div class="form__foot">
-      <label class="form__gdpr">
-        <input type="checkbox" name="gdpr" required />
-        <span>Souhlasím se <a href="/gdpr">zpracováním osobních údajů</a>.</span>
-      </label>
-      <button type="submit" class="form__submit">
-        <span>Odeslat poptávku</span>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
+    <label class="form__gdpr">
+      <input type="checkbox" name="gdpr" required />
+      <span>Souhlasím se <a href="/gdpr">zpracováním osobních údajů</a>.</span>
+    </label>
+
+    <button type="submit" class="form__submit">
+      <span>Odeslat poptávku</span>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
   </form>
 </div>
 
 <style>
   .kontakt {
-    max-width: 780px;
+    max-width: 620px;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
-    gap: clamp(2.5rem, 5vw, 4rem);
-  }
-  .kontakt__intro { text-align: center; }
-  .kontakt__lead {
-    font-size: var(--fs-lg);
-    line-height: var(--lh-snug);
-    color: var(--muted);
-    max-width: 56ch;
-    margin-inline: auto;
-    font-weight: 300;
-  }
-  .kontakt__alt {
-    margin-top: 1.25rem;
-    font-size: var(--fs-sm);
-    color: var(--muted-soft);
-  }
-  .kontakt__alt a {
-    color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-thickness: 1px;
-    text-decoration-color: var(--accent);
+    gap: clamp(2rem, 4vw, 3rem);
   }
 
-  .form { display: flex; flex-direction: column; gap: 1.75rem; }
-  .form__row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(1.25rem, 2.5vw, 2rem);
+  .kontakt__intro { text-align: center; }
+  .kontakt__lead {
+    font-size: var(--fs-base);
+    line-height: var(--lh-snug);
+    color: var(--muted);
+    max-width: 50ch;
+    margin-inline: auto;
   }
-  @media (max-width: 560px) { .form__row { grid-template-columns: 1fr; } }
+  .kontakt__direct {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: clamp(1rem, 2vw, 2rem);
+    flex-wrap: wrap;
+  }
+  .kontakt__direct a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--ink);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .kontakt__direct a:hover {
+    color: var(--accent-hover);
+    border-bottom-color: var(--accent);
+  }
+
+  /* form */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 
   .form__field { display: flex; flex-direction: column; gap: 0.4rem; }
   .form__field label {
@@ -117,7 +133,7 @@ const {
     background: transparent;
     border: 0;
     border-bottom: 1px solid var(--line);
-    padding: 0.7rem 0;
+    padding: 0.75rem 0;
     font-size: var(--fs-base);
     color: inherit;
     transition: border-color var(--dur-fast) var(--ease-out);
@@ -127,24 +143,18 @@ const {
     outline: none;
     border-bottom-color: var(--ink);
   }
-  .form__field textarea { resize: vertical; min-height: 96px; }
-
-  .form__foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.25rem;
-    padding-top: 0.5rem;
-    flex-wrap: wrap;
+  .form__field textarea {
+    resize: vertical;
+    min-height: 100px;
   }
+
   .form__gdpr {
     display: flex;
     gap: 0.55rem;
     align-items: flex-start;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: var(--muted);
-    max-width: 38ch;
-    line-height: 1.4;
+    line-height: 1.45;
   }
   .form__gdpr a {
     color: var(--ink);
@@ -154,16 +164,19 @@ const {
   }
 
   .form__submit {
+    align-self: stretch;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 1rem 1.75rem;
+    padding: 1.05rem 1.75rem;
     background: var(--ink);
     color: var(--paper);
     border-radius: var(--radius-pill);
     font-size: var(--fs-sm);
     font-weight: 500;
     letter-spacing: 0.02em;
+    margin-top: 0.5rem;
     transition: background var(--dur-fast) var(--ease-out),
                 transform var(--dur-fast) var(--ease-out);
   }
