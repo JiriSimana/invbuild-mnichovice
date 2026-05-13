@@ -1,6 +1,6 @@
 ---
-// Lokalita — mapa + refinovaný accordion. NE plně žluté panely — místo toho cream pozadí
-// se žlutým markerem + serif nadpis. Editoriálnější, klidnější.
+// Lokalita — mapa + hustý accordion. Vše otevřené default, žádné name= → nezávislé položky.
+// Mapa menší, sticky. Accordion má větší vizuální váhu.
 export interface Props {
   coordinates?: string;
   address?: string;
@@ -14,27 +14,40 @@ const {
 
 const [lat, lng] = coordinates.split(',');
 const gmapsSrc = `https://www.google.com/maps?q=${lat},${lng}&hl=cs&z=12&output=embed`;
+const mapyHref = `https://mapy.cz/?x=${lng}&y=${lat}&z=14&q=${encodeURIComponent(address)}`;
 ---
 
 <div class="lokalita">
-  <div class="lokalita__map" data-reveal>
-    <iframe
-      src={gmapsSrc}
-      title={`Mapa: ${address}`}
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-      allowfullscreen
-    ></iframe>
-  </div>
+  <aside class="lokalita__map-col" data-reveal>
+    <div class="lokalita__map">
+      <iframe
+        src={gmapsSrc}
+        title={`Mapa: ${address}`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <div class="lokalita__map-meta">
+      <span class="eyebrow">Adresa</span>
+      <p>{address}</p>
+      <a href={mapyHref} target="_blank" rel="noopener" class="lokalita__map-link">
+        Otevřít v Mapy.cz
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </aside>
 
   <div class="lokalita__panels" data-reveal>
     {groups.map((g, i) => (
-      <details class="acc" name="lokalita-acc" open={i === 0}>
+      <details class="acc" open>
         <summary class="acc__head">
           <span class="acc__num lining">{String(i + 1).padStart(2, '0')}</span>
           <span class="acc__title">{g.title}</span>
           <span class="acc__icon" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
@@ -48,42 +61,79 @@ const gmapsSrc = `https://www.google.com/maps?q=${lat},${lng}&hl=cs&z=12&output=
 <style>
   .lokalita {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.75fr 1.25fr;     /* accordion dostává více prostoru */
     gap: clamp(1.5rem, 3vw, 3rem);
-    align-items: stretch;
+    align-items: start;
   }
   @media (max-width: 1000px) {
     .lokalita { grid-template-columns: 1fr; }
   }
 
-  /* map */
+  /* Map column — sticky, menší */
+  .lokalita__map-col {
+    position: sticky;
+    top: clamp(4rem, 8vh, 7rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  @media (max-width: 1000px) { .lokalita__map-col { position: static; } }
+
   .lokalita__map {
     border-radius: var(--radius-md);
     overflow: hidden;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 5;
+    min-height: 320px;
     background: var(--ink-soft);
-    min-height: 480px;
-    position: sticky;
-    top: clamp(4rem, 8vh, 7rem);
-    align-self: start;
   }
-  @media (max-width: 1000px) {
-    .lokalita__map { aspect-ratio: 16 / 10; min-height: 320px; position: static; }
+  .lokalita__map iframe {
+    width: 100%; height: 100%; border: 0;
+    filter: grayscale(0.45) contrast(1.03);
   }
-  .lokalita__map iframe { width: 100%; height: 100%; border: 0; filter: grayscale(0.4) contrast(1.02); }
 
-  /* panels — minimal editorial accordion */
+  .lokalita__map-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .lokalita__map-meta p {
+    font-size: var(--fs-base);
+    font-weight: 500;
+    color: var(--paper);
+  }
+  .lokalita__map-meta .eyebrow { color: rgba(255,255,255,0.55); }
+
+  .lokalita__map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--fs-sm);
+    color: var(--accent);
+    padding-top: 0.4rem;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .lokalita__map-link:hover { color: var(--accent-soft); }
+  .lokalita__map-link svg {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .lokalita__map-link:hover svg { transform: translate(2px, -2px); }
+
+  /* Light variant of meta */
+  :global(.section:not(.section--dark)) .lokalita__map-meta { color: var(--muted); }
+  :global(.section:not(.section--dark)) .lokalita__map-meta p { color: var(--ink); }
+  :global(.section:not(.section--dark)) .lokalita__map-meta .eyebrow { color: var(--muted); }
+
+  /* Accordion — hustší, vše viditelné */
   .lokalita__panels {
     display: flex;
     flex-direction: column;
   }
 
   .acc {
-    border-top: 1px solid rgba(255,255,255,0.12);
-    transition: background var(--dur-base) var(--ease-out);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
-  .acc:last-of-type { border-bottom: 1px solid rgba(255,255,255,0.12); }
-  .acc[open] { background: rgba(255,255,255,0.03); }
+  .acc:last-of-type { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
 
   .acc__head {
     list-style: none;
@@ -91,12 +141,10 @@ const gmapsSrc = `https://www.google.com/maps?q=${lat},${lng}&hl=cs&z=12&output=
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 1.25rem;
-    padding: 1.5rem 0.25rem 1.5rem 0.25rem;
+    gap: 0.95rem;
+    padding: 0.9rem 0;
     user-select: none;
-    transition: padding var(--dur-base) var(--ease-out);
   }
-  .acc[open] .acc__head { padding-bottom: 0.5rem; }
   .acc__head::-webkit-details-marker { display: none; }
   .acc__head::marker { display: none; content: ''; }
 
@@ -105,71 +153,70 @@ const gmapsSrc = `https://www.google.com/maps?q=${lat},${lng}&hl=cs&z=12&output=
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
     color: var(--accent);
-    opacity: 0.85;
   }
   .acc__title {
     font-family: var(--font-display);
-    font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
-    font-weight: 400;
+    font-size: var(--fs-lg);          /* sjednoceno, mnohem menší */
+    font-weight: 600;
     letter-spacing: var(--tracking-tight);
     color: var(--paper);
-    font-variation-settings: 'opsz' 60, 'SOFT' 50;
   }
   .acc__icon {
     color: rgba(255,255,255,0.5);
     transition: transform var(--dur-base) var(--ease-out),
                 color var(--dur-fast) var(--ease-out);
   }
-  .acc[open] .acc__icon {
-    transform: rotate(180deg);
-    color: var(--accent);
-  }
+  .acc[open] .acc__icon { transform: rotate(180deg); color: var(--accent); }
   .acc:hover .acc__icon { color: var(--accent); }
 
   .acc__body {
-    padding: 0 0.25rem 1.75rem;
+    padding: 0.25rem 0 1.25rem 2.7rem;   /* zarovnáno za číslo */
     font-size: var(--fs-sm);
-    line-height: 1.65;
-    color: rgba(255,255,255,0.78);
-    max-width: 56ch;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 60ch;
   }
-  .acc__body :global(p) + :global(p) { margin-top: 0.6rem; }
-  .acc__body :global(p) { margin-bottom: 0.85rem; }
+  .acc__body :global(p) {
+    margin-bottom: 0.65rem;
+    color: rgba(255, 255, 255, 0.88);
+  }
+  .acc__body :global(p):last-child { margin-bottom: 0; }
   .acc__body :global(ul) {
     list-style: none;
     padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: 0.45rem;
   }
   .acc__body :global(li) {
     position: relative;
-    padding-left: 1.1rem;
+    padding-left: 1rem;
   }
   .acc__body :global(li)::before {
     content: '';
     position: absolute;
-    left: 0; top: 0.7em;
+    left: 0; top: 0.65em;
     width: 6px; height: 1px;
     background: var(--accent);
   }
-  .acc__body :global(strong) {
-    color: var(--paper);
-    font-weight: 500;
-  }
+  .acc__body :global(strong) { color: var(--paper); font-weight: 600; }
 
-  /* light variant — for non-dark sections */
+  /* Light variant overrides */
   :global(.section:not(.section--dark)) .acc {
     border-top-color: var(--line);
   }
   :global(.section:not(.section--dark)) .acc:last-of-type {
     border-bottom-color: var(--line);
   }
-  :global(.section:not(.section--dark)) .acc[open] {
-    background: rgba(20,17,12,0.02);
-  }
   :global(.section:not(.section--dark)) .acc__title { color: var(--ink); }
   :global(.section:not(.section--dark)) .acc__body { color: var(--muted); }
+  :global(.section:not(.section--dark)) .acc__body :global(p) { color: var(--muted); }
   :global(.section:not(.section--dark)) .acc__body :global(strong) { color: var(--ink); }
   :global(.section:not(.section--dark)) .acc__icon { color: var(--muted-soft); }
+
+  /* Mobile fine-tuning */
+  @media (max-width: 600px) {
+    .acc__body { padding-left: 0; }
+  }
 </style>

@@ -1,6 +1,6 @@
 ---
-// SectionNav — sticky pravý scrollspy s vždy viditelnými labely.
-// Klikatelné. IntersectionObserver pro aktivní stav. Auto-flip barev nad tmavými sekcemi.
+// SectionNav — sticky pravý scrollspy v glass-blur pillu.
+// Vlastní tmavé pozadí → vždy čitelné nad jakoukoliv sekcí (žádné auto-detection).
 export interface Props {
   items: { id: string; label: string }[];
 }
@@ -22,46 +22,47 @@ const { items } = Astro.props;
 </nav>
 
 <style>
+  /* Glass-blur pill — vlastní tmavé pozadí pro konzistentní čitelnost */
   .snav {
     position: fixed;
     right: clamp(0.75rem, 1.5vw, 1.5rem);
     top: 50%;
     transform: translateY(-50%);
     z-index: var(--z-sticky);
-    pointer-events: none;
+
+    background: rgba(20, 17, 12, 0.62);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    padding: 0.85rem 1.05rem 0.85rem 0.95rem;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
   }
   .snav ul {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
-    pointer-events: auto;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
-  /* Hairline left of stack, optional */
-  .snav::before {
-    content: '';
-    position: absolute;
-    left: -8px;
-    top: 8px; bottom: 8px;
-    width: 1px;
-    background: var(--line);
-    opacity: 0.35;
-  }
-
+  /* Items */
   .snav a {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.35rem 0;
-    color: var(--ink);
-    opacity: 0.55;
-    transition: opacity var(--dur-fast) var(--ease-out),
-                gap var(--dur-base) var(--ease-out);
+    gap: 0.7rem;
+    padding: 0.4rem 0;
+    color: rgba(255, 255, 255, 0.62);
+    transition: color var(--dur-fast) var(--ease-out);
   }
-  .snav a:hover { opacity: 1; }
-  .snav a[data-active='true'] { opacity: 1; gap: 0.9rem; }
+  .snav a:hover,
+  .snav a[data-active='true'] {
+    color: var(--paper);
+  }
 
+  /* Label — vždy viditelný */
   .snav__label {
     font-family: var(--font-sans);
     font-size: 11px;
@@ -72,48 +73,35 @@ const { items } = Astro.props;
     white-space: nowrap;
     text-align: right;
   }
+
+  /* Number — drobné v monospace */
   .snav__num {
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: var(--tracking-wide);
-    color: var(--muted);
+    color: rgba(255, 255, 255, 0.45);
     text-align: right;
     min-width: 1.6em;
+    transition: color var(--dur-fast) var(--ease-out);
   }
+  .snav a[data-active='true'] .snav__num { color: var(--accent); }
+
+  /* Dot — aktivní = žlutý protáhlý */
   .snav__dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: currentColor;
     transition: width var(--dur-base) var(--ease-out),
                 background var(--dur-fast) var(--ease-out),
                 box-shadow var(--dur-fast) var(--ease-out);
   }
-
-  /* Active state */
   .snav a[data-active='true'] .snav__dot {
     background: var(--accent);
     width: 22px;
     border-radius: 3px;
-    box-shadow: 0 0 0 4px rgba(217, 152, 33, 0.15);
+    box-shadow: 0 0 0 4px rgba(217, 152, 33, 0.18);
   }
-  .snav a[data-active='true'] .snav__num { color: var(--accent); }
-
-  /* ON LIGHT — default colors fine */
-
-  /* ON DARK — explicit overrides for visibility */
-  .snav[data-on-dark='true'] a {
-    color: rgba(255, 255, 255, 0.92);
-    opacity: 0.7;
-  }
-  .snav[data-on-dark='true'] a:hover,
-  .snav[data-on-dark='true'] a[data-active='true'] {
-    opacity: 1;
-  }
-  .snav[data-on-dark='true'] .snav__num   { color: rgba(255, 255, 255, 0.6); }
-  .snav[data-on-dark='true'] .snav__label { color: rgba(255, 255, 255, 0.95); }
-  .snav[data-on-dark='true']::before { background: rgba(255, 255, 255, 0.25); opacity: 0.4; }
-  .snav[data-on-dark='true'] a[data-active='true'] .snav__num { color: var(--accent); }
 
   /* Hide on mobile/tablet — drawer covers this */
   @media (max-width: 1100px) {
@@ -138,18 +126,6 @@ const { items } = Astro.props;
       });
     };
 
-    // Detect whether the section at the right-middle of the viewport is dark
-    const updateContrast = () => {
-      const cx = window.innerWidth - 80;
-      const cy = window.innerHeight / 2;
-      const el = document.elementFromPoint(cx, cy);
-      if (!el) return;
-      const onDarkSection = el.closest('.section--dark');
-      const onHero = el.closest('#hero');
-      nav.dataset.onDark = (onDarkSection || onHero) ? 'true' : 'false';
-    };
-
-    // IntersectionObserver — pick section with biggest visible area
     const io = new IntersectionObserver(
       () => {
         let bestId = activeId;
@@ -161,22 +137,11 @@ const { items } = Astro.props;
           if (ratio > bestRatio) { bestRatio = ratio; bestId = s.id; }
         }
         if (bestId) setActive(bestId);
-        updateContrast();
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] }
     );
     sections.forEach((s) => io.observe(s));
 
-    // Update contrast on scroll (rAF-throttled)
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => { updateContrast(); ticking = false; });
-        ticking = true;
-      }
-    }, { passive: true });
-
     setActive(sections[0].id);
-    updateContrast();
   }
 </script>
