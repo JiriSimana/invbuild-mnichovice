@@ -1,25 +1,17 @@
 ---
-// StorySplit — Asymmetric editorial layout: oversized image + offset text column
-// Optional drop cap, image caption, numbered section
+// StorySplit — asymetrický 2-sloupec: text + foto. Žádný dropcap.
 export interface Props {
-  num?: string;                      // "01"
+  num?: string;
   eyebrow?: string;
   title: string;
   image: { src: string; alt: string };
-  caption?: string;                  // figure caption below image
-  reverse?: boolean;                 // image on left
+  caption?: string;
+  reverse?: boolean;
   variant?: 'light' | 'dark';
-  dropcap?: boolean;
 }
 const {
-  num,
-  eyebrow,
-  title,
-  image,
-  caption,
-  reverse = false,
-  variant = 'light',
-  dropcap = true,
+  num, eyebrow, title, image, caption,
+  reverse = false, variant = 'light',
 } = Astro.props;
 ---
 
@@ -32,7 +24,7 @@ const {
       </span>
     )}
     <h2 class="split__title">{title}</h2>
-    <div class:list={['split__body', dropcap && 'dropcap']}><slot /></div>
+    <div class="split__body"><slot /></div>
   </div>
 
   <figure class="split__media">
@@ -44,11 +36,11 @@ const {
 <style>
   .split {
     display: grid;
-    grid-template-columns: 1fr 1.2fr;            /* asymmetric — image larger */
-    gap: clamp(2rem, 5vw, 6rem);
-    align-items: start;
+    grid-template-columns: 1fr 1.15fr;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
   }
-  .split--reverse { grid-template-columns: 1.2fr 1fr; }
+  .split--reverse { grid-template-columns: 1.15fr 1fr; }
   .split--reverse .split__text  { order: 2; }
   .split--reverse .split__media { order: 1; }
 
@@ -60,36 +52,30 @@ const {
   }
 
   .split__text {
-    position: sticky;
-    top: clamp(4rem, 8vh, 7rem);
-    align-self: start;
     display: flex;
     flex-direction: column;
-    gap: clamp(1rem, 2vw, 1.5rem);
+    gap: 1rem;
+    max-width: 52ch;
   }
-  @media (max-width: 920px) { .split__text { position: static; } }
-
   .split__title {
     margin: 0;
     text-wrap: balance;
   }
-
   .split__body {
     font-size: var(--fs-base);
     line-height: var(--lh-base);
     color: var(--muted);
-    max-width: 52ch;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
-  .split--dark .split__body { color: rgba(255,255,255,0.78); }
+  .split--dark .split__body  { color: rgba(255,255,255,0.78); }
   .split--dark .split__title { color: var(--paper); }
-  .split--dark .eyebrow { color: rgba(255,255,255,0.7); }
+  .split--dark .eyebrow      { color: rgba(255,255,255,0.7); }
   .split--dark .eyebrow__num { color: var(--accent); }
 
-  .split__body :global(p + p) { margin-top: 1.1rem; }
+  .split__body :global(p + p) { margin-top: 0.85rem; }
   .split__body :global(strong) {
     color: var(--ink);
-    font-weight: 500;
+    font-weight: 600;
   }
   .split--dark .split__body :global(strong) { color: var(--paper); }
 
@@ -97,7 +83,7 @@ const {
   .split__media {
     border-radius: var(--radius-md);
     overflow: hidden;
-    aspect-ratio: 3 / 4;                  /* portrait — more editorial than 4:3 */
+    aspect-ratio: 4 / 3;
     background: var(--paper-bone);
     position: relative;
   }
@@ -106,12 +92,9 @@ const {
     transition: transform 1.2s var(--ease-out);
   }
   .split:hover .split__media img { transform: scale(1.03); }
-
   .split__caption {
     position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
+    bottom: 0.75rem; left: 0.85rem; right: 0.85rem;
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
@@ -119,10 +102,5 @@ const {
     color: rgba(255,255,255,0.85);
     text-shadow: 0 1px 6px rgba(0,0,0,0.5);
     pointer-events: none;
-  }
-
-  /* on wider screens, allow image to be slightly taller */
-  @media (min-width: 1100px) {
-    .split__media { aspect-ratio: 4 / 5; }
   }
 </style>

@@ -1,11 +1,10 @@
 /* ============================================================
    INVBUILD — Design Tokens (sdílené napříč všemi weby značky)
-   Editorial / architecture magazine aesthetic.
+   Modern minimal / contemporary real estate aesthetic.
 ============================================================ */
 
 :root {
   /* ---------- COLOR — warm neutral palette ---------- */
-  /* Use warm charcoals instead of pure black, cream papers instead of pure white */
   --ink:        #14110c;  /* warm charcoal — primary text & dark surfaces */
   --ink-soft:   #221e17;  /* hover / cards on dark */
   --ink-muted:  #4a443a;  /* secondary on dark */
@@ -19,41 +18,42 @@
   --muted:      #6e6759;  /* secondary text on light */
   --muted-soft: #908976;  /* tertiary / captions */
 
-  /* ---------- COLOR — accent (used SPARINGLY — CTAs + small details) ---------- */
+  /* ---------- COLOR — accent ---------- */
   --accent:        #d99821;  /* sytá marigold žlutá */
   --accent-hover:  #b9801a;
   --accent-soft:   #f0c66b;
   --accent-ink:    #2a1d05;  /* dark ink na žluté */
 
-  /* ---------- TYPOGRAPHY ---------- */
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+  /* ---------- TYPOGRAPHY — Inter only ---------- */
+  --font-display: 'Inter Variable', 'Inter', system-ui, -apple-system,
+                  'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-sans:    'Inter Variable', 'Inter', system-ui, -apple-system,
                   'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono:    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
 
-  /* Editorial type scale — pushed larger, more dramatic */
-  --fs-xs:      clamp(0.74rem, 0.7rem + 0.2vw, 0.8rem);
-  --fs-sm:      clamp(0.85rem, 0.8rem + 0.25vw, 0.92rem);
-  --fs-base:    clamp(1rem, 0.95rem + 0.25vw, 1.075rem);
-  --fs-lg:      clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
-  --fs-xl:      clamp(1.45rem, 1.2rem + 1.2vw, 1.95rem);
-  --fs-2xl:     clamp(2rem, 1.5rem + 2.5vw, 3.2rem);
-  --fs-3xl:     clamp(2.8rem, 2rem + 4vw, 5rem);
-  --fs-display: clamp(3.5rem, 2.5rem + 6vw, 8.5rem);
-  --fs-mega:    clamp(4.5rem, 3rem + 9vw, 12rem);
+  /* Type scale — usable, modern, not bombastic */
+  --fs-xs:      clamp(0.75rem, 0.72rem + 0.15vw, 0.82rem);
+  --fs-sm:      clamp(0.86rem, 0.82rem + 0.2vw, 0.92rem);
+  --fs-base:    clamp(1rem, 0.95rem + 0.2vw, 1.05rem);
+  --fs-lg:      clamp(1.12rem, 1.04rem + 0.4vw, 1.25rem);
+  --fs-xl:      clamp(1.4rem, 1.2rem + 1vw, 1.75rem);
+  --fs-2xl:     clamp(1.85rem, 1.5rem + 1.7vw, 2.6rem);
+  --fs-3xl:     clamp(2.3rem, 1.8rem + 2.5vw, 3.4rem);
+  --fs-display: clamp(2.8rem, 2rem + 3.5vw, 4.6rem);
+  --fs-mega:    clamp(3.5rem, 2.5rem + 4.5vw, 5.8rem);
 
-  --lh-tight:   1.02;
-  --lh-snug:    1.15;
+  --lh-tight:   1.05;
+  --lh-snug:    1.18;
   --lh-base:    1.6;
   --lh-loose:   1.75;
 
-  --tracking-tightest: -0.04em;
+  --tracking-tightest: -0.035em;
   --tracking-tight:    -0.02em;
   --tracking-base:     -0.005em;
   --tracking-wide:     0.12em;
   --tracking-extra:    0.22em;
 
-  /* ---------- SPACING — generous editorial rhythm ---------- */
+  /* ---------- SPACING — modern compact rhythm ---------- */
   --space-1:  0.25rem;
   --space-2:  0.5rem;
   --space-3:  0.75rem;
@@ -64,23 +64,21 @@
   --space-8:  4rem;
   --space-9:  6rem;
   --space-10: 9rem;
-  --space-11: 12rem;
-  --space-12: 16rem;
 
-  /* Section vertical rhythm — much more air than typical sites */
-  --pad-section: clamp(6rem, 11vw, 12rem);
-  --pad-section-tight: clamp(4rem, 7vw, 7rem);
+  /* Section vertical rhythm — výrazně zkráceno, web musí dýchat ale né plavat */
+  --pad-section:       clamp(3.5rem, 5.5vw, 6rem);
+  --pad-section-tight: clamp(2.5rem, 4vw, 4rem);
 
-  --container-max:    1440px;   /* wider — gives image room to breathe */
-  --container-default:1280px;
-  --container-narrow: 760px;    /* prose */
-  --gutter:           clamp(1.25rem, 5vw, 3rem);
+  --container-max:     1440px;
+  --container-default: 1240px;
+  --container-narrow:  760px;
+  --gutter:            clamp(1.25rem, 4vw, 2.5rem);
 
   /* ---------- RADII ---------- */
   --radius-sm:   4px;
   --radius-md:   10px;
   --radius-lg:   18px;
-  --radius-xl:   32px;
+  --radius-xl:   28px;
   --radius-pill: 999px;
 
   /* ---------- SHADOWS ---------- */

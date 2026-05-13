@@ -1,8 +1,9 @@
 ---
-// Hero — full-bleed photo carousel, oversized serif title, editorial stats grid
+// Hero — full-bleed carousel + readable title + stats
+// Silný overlay vlevo zaručí čitelnost textu nad jakoukoliv fotkou.
 export interface Props {
   title: string;
-  location?: string;          // small caption above title (e.g. "Mnichovice · Praha-východ")
+  location?: string;
   stats: { label: string; value: string }[];
   images: { src: string; alt: string }[];
 }
@@ -18,7 +19,10 @@ const { title, location, stats, images } = Astro.props;
              fetchpriority={i === 0 ? 'high' : 'auto'} />
       </div>
     ))}
-    <div class="hero__overlay"></div>
+
+    <!-- Silnější vrstvený overlay — guarantee readability -->
+    <div class="hero__overlay-side"  aria-hidden="true"></div>
+    <div class="hero__overlay-bottom" aria-hidden="true"></div>
 
     {images.length > 1 && (
       <>
@@ -32,22 +36,24 @@ const { title, location, stats, images } = Astro.props;
             <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-      </>
-    )}
 
-    <!-- slide counter, bottom right of media -->
-    {images.length > 1 && (
-      <div class="hero__counter">
-        <span data-hero-current>01</span>
-        <span class="hero__counter-sep">/</span>
-        <span>{String(images.length).padStart(2, '0')}</span>
-      </div>
+        <div class="hero__counter">
+          <span data-hero-current>01</span>
+          <span class="hero__counter-sep">/</span>
+          <span>{String(images.length).padStart(2, '0')}</span>
+        </div>
+      </>
     )}
   </div>
 
   <div class="hero__content container container--wide">
     <div class="hero__intro">
-      {location && <span class="eyebrow"><span class="eyebrow__num">01</span><span>{location}</span></span>}
+      {location && (
+        <span class="eyebrow hero__eyebrow">
+          <span class="eyebrow__num">01</span>
+          <span>{location}</span>
+        </span>
+      )}
       <h1 class="hero__title">{title}</h1>
     </div>
 
@@ -63,7 +69,7 @@ const { title, location, stats, images } = Astro.props;
 
   <a href="#galerie" class="hero__scroll" aria-label="Scrollovat dolů">
     <span>Scroll</span>
-    <svg width="12" height="20" viewBox="0 0 12 20" fill="none" aria-hidden="true">
+    <svg width="11" height="18" viewBox="0 0 12 20" fill="none" aria-hidden="true">
       <path d="M6 1V19M6 19L1 14M6 19L11 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </a>
@@ -72,7 +78,7 @@ const { title, location, stats, images } = Astro.props;
 <style>
   .hero {
     position: relative;
-    min-height: 100svh;
+    min-height: 92svh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -81,9 +87,9 @@ const { title, location, stats, images } = Astro.props;
     background: var(--ink);
     isolation: isolate;
   }
-  .hero__carousel {
-    position: absolute; inset: 0; z-index: 0;
-  }
+
+  /* slides */
+  .hero__carousel { position: absolute; inset: 0; z-index: 0; }
   .hero__slide {
     position: absolute; inset: 0;
     opacity: 0;
@@ -93,19 +99,30 @@ const { title, location, stats, images } = Astro.props;
   .hero__slide img {
     width: 100%; height: 100%; object-fit: cover;
     transform: scale(1.02);
-    transition: transform 12s linear;
+    transition: transform 14s linear;
   }
-  .hero__slide[data-active='true'] img { transform: scale(1.08); }
+  .hero__slide[data-active='true'] img { transform: scale(1.06); }
 
-  .hero__overlay {
-    position: absolute; inset: 0;
-    z-index: 1;
+  /* SILNÝ overlay — zaručí čitelnost textu nad jakoukoliv fotkou */
+  /* 1) Vrstva vlevo (kde leží text) — diagonální gradient */
+  .hero__overlay-side {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(95deg,
+        rgba(20,17,12,0.78) 0%,
+        rgba(20,17,12,0.62) 28%,
+        rgba(20,17,12,0.35) 52%,
+        rgba(20,17,12,0.10) 75%,
+        rgba(20,17,12,0)    100%);
+  }
+  /* 2) Vrstva dole (kde leží stats) */
+  .hero__overlay-bottom {
+    position: absolute; inset: 0; z-index: 1;
     background:
       linear-gradient(180deg,
-        rgba(20,17,12,0.10) 0%,
-        rgba(20,17,12,0) 30%,
-        rgba(20,17,12,0.55) 70%,
-        rgba(20,17,12,0.95) 100%);
+        rgba(20,17,12,0)    35%,
+        rgba(20,17,12,0.45) 70%,
+        rgba(20,17,12,0.92) 100%);
   }
 
   /* arrows */
@@ -113,11 +130,11 @@ const { title, location, stats, images } = Astro.props;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 56px; height: 56px;
+    width: 48px; height: 48px;
     border-radius: 50%;
-    background: rgba(20,17,12,0.35);
+    background: rgba(20,17,12,0.42);
     color: var(--paper);
-    border: 1px solid rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.2);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     display: grid; place-items: center;
@@ -126,8 +143,8 @@ const { title, location, stats, images } = Astro.props;
                 border-color var(--dur-fast) var(--ease-out);
   }
   .hero__arrow:hover {
-    background: rgba(20,17,12,0.55);
-    border-color: rgba(255,255,255,0.35);
+    background: rgba(20,17,12,0.65);
+    border-color: rgba(255,255,255,0.4);
   }
   .hero__arrow--prev { left: clamp(1rem, 2.5vw, 2rem); }
   .hero__arrow--next { right: clamp(1rem, 2.5vw, 2rem); }
@@ -135,16 +152,16 @@ const { title, location, stats, images } = Astro.props;
   /* slide counter */
   .hero__counter {
     position: absolute;
-    bottom: clamp(1rem, 2.5vw, 2rem);
-    right: clamp(1rem, 2.5vw, 2rem);
+    bottom: clamp(1rem, 2vw, 1.75rem);
+    right: clamp(1rem, 2vw, 1.75rem);
     z-index: 3;
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
     color: rgba(255,255,255,0.85);
     display: flex; gap: 0.4rem;
-    background: rgba(20,17,12,0.4);
-    padding: 0.5rem 0.9rem;
+    background: rgba(20,17,12,0.45);
+    padding: 0.45rem 0.85rem;
     border-radius: var(--radius-pill);
     border: 1px solid rgba(255,255,255,0.12);
     backdrop-filter: blur(8px);
@@ -156,84 +173,82 @@ const { title, location, stats, images } = Astro.props;
   .hero__content {
     position: relative;
     z-index: 2;
-    padding-bottom: clamp(3rem, 6vw, 5rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
     padding-top: 5rem;
     display: grid;
     grid-template-columns: 1.4fr 1fr;
-    gap: clamp(2rem, 4vw, 4rem);
+    gap: clamp(1.5rem, 3vw, 3rem);
     align-items: flex-end;
   }
   @media (max-width: 860px) {
     .hero__content { grid-template-columns: 1fr; }
   }
 
-  .hero__intro .eyebrow {
-    color: rgba(255,255,255,0.8);
-    margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  .hero__eyebrow {
+    color: rgba(255,255,255,0.85);
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
   }
-  .hero__intro .eyebrow__num { color: var(--accent); }
+  .hero__eyebrow .eyebrow__num { color: var(--accent); }
 
   .hero__title {
     font-size: var(--fs-mega);
-    line-height: 0.95;
+    line-height: 1;
     letter-spacing: var(--tracking-tightest);
-    font-weight: 300;
+    font-weight: 700;
     text-wrap: balance;
-    max-width: 14ch;
-    text-shadow: 0 2px 40px rgba(0,0,0,0.35);
-    font-variation-settings: 'opsz' 144, 'SOFT' 20;
+    max-width: 18ch;
+    text-shadow:
+      0 2px 16px rgba(0,0,0,0.45),
+      0 1px 3px rgba(0,0,0,0.6);
   }
 
   /* stats */
   .hero__stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: clamp(1rem, 2vw, 2rem);
-    padding-top: clamp(1.5rem, 2.5vw, 2rem);
-    border-top: 1px solid rgba(255,255,255,0.22);
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+    padding-top: clamp(1rem, 2vw, 1.5rem);
+    border-top: 1px solid rgba(255,255,255,0.25);
     align-self: end;
   }
-  .hero__stat {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
+  .hero__stat { display: flex; flex-direction: column; gap: 0.35rem; }
   .hero__stat-label {
     font-family: var(--font-sans);
     font-size: var(--fs-xs);
     text-transform: uppercase;
     letter-spacing: var(--tracking-extra);
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.7);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
   }
   .hero__stat-value {
     font-family: var(--font-display);
     font-size: var(--fs-xl);
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: var(--tracking-tight);
-    line-height: 1.05;
-    font-variation-settings: 'opsz' 60, 'SOFT' 50;
+    line-height: 1.1;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
   }
 
   /* scroll indicator */
   .hero__scroll {
     position: absolute;
-    left: clamp(1rem, 2.5vw, 2rem);
-    bottom: clamp(1rem, 2.5vw, 2rem);
+    left: clamp(1rem, 2vw, 1.75rem);
+    bottom: clamp(1rem, 2vw, 1.75rem);
     z-index: 3;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.55rem;
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.75);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     transition: color var(--dur-fast) var(--ease-out);
   }
   .hero__scroll:hover { color: var(--paper); }
-  .hero__scroll svg {
-    animation: scrollHint 2.5s var(--ease-in-out) infinite;
-  }
+  .hero__scroll svg { animation: scrollHint 2.5s var(--ease-in-out) infinite; }
   @keyframes scrollHint {
     0%, 100% { transform: translateY(0); opacity: 0.7; }
     50%      { transform: translateY(4px); opacity: 1; }
@@ -260,12 +275,10 @@ const { title, location, stats, images } = Astro.props;
 
     document.querySelector('[data-hero-prev]')?.addEventListener('click', () => { show(idx - 1); reset(); });
     document.querySelector('[data-hero-next]')?.addEventListener('click', () => { show(idx + 1); reset(); });
-
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) { if (timer) clearInterval(timer); }
       else { start(); }
     });
-
     if (slides.length > 1) start();
   }
 </script>

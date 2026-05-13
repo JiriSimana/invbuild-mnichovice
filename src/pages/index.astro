@@ -3,6 +3,7 @@ import Layout      from '../layouts/Layout.astro';
 import Header      from '../components/Header.astro';
 import Hero        from '../components/Hero.astro';
 import Section     from '../components/Section.astro';
+import SectionNav  from '../components/SectionNav.astro';
 import Gallery     from '../components/Gallery.astro';
 import StorySplit  from '../components/StorySplit.astro';
 import Lokalita    from '../components/Lokalita.astro';
@@ -14,9 +15,9 @@ import Reveal      from '../components/Reveal.astro';
 // ----- HERO -----
 const stats = [
   { label: 'Rozloha pozemku', value: '480 m²' },
-  { label: 'Užitná plocha',   value: '159 m²' },
-  { label: 'Dispozice',        value: '5+1'    },
-  { label: 'Cena',             value: '31 900 000 Kč' },
+  { label: 'Užitná plocha',    value: '159 m²' },
+  { label: 'Dispozice',         value: '5+1'    },
+  { label: 'Cena',              value: '31 900 000 Kč' },
 ];
 
 const heroImages = [
@@ -78,7 +79,7 @@ const locGroups = [
       </ul>`,
   },
   {
-    id: 'lokalita',
+    id: 'lokalita-detail',
     title: 'Lokalita',
     content: `<p>Mnichovice, obec situovaná východně od Prahy. Tato lokalita je známá svou
       krásnou přírodou a klidným prostředím, což z ní činí atraktivní místo pro bydlení i rekreaci.</p>
@@ -89,9 +90,21 @@ const locGroups = [
 ];
 
 const serviceCards = [
-  { title: 'Designové koupelny', image: { src: '/img/mnichovice-11.webp', alt: 'Moderní koupelna s černou armaturou' } },
-  { title: 'Ložnice s charakterem', image: { src: '/img/mnichovice-13.webp', alt: 'Ložnice s designovým osvětlením' } },
-  { title: 'Otevřené obytné prostory', image: { src: '/img/mnichovice-04.webp', alt: 'Otevřený obývací prostor s krbem' } },
+  { title: 'Designové koupelny',         image: { src: '/img/mnichovice-11.webp', alt: 'Moderní koupelna s černou armaturou' } },
+  { title: 'Ložnice s charakterem',      image: { src: '/img/mnichovice-13.webp', alt: 'Ložnice s designovým osvětlením' } },
+  { title: 'Otevřené obytné prostory',   image: { src: '/img/mnichovice-04.webp', alt: 'Otevřený obývací prostor s krbem' } },
+];
+
+// Section nav — pravý scrollspy
+const navItems = [
+  { id: 'hero',         label: 'Úvod' },
+  { id: 'galerie',      label: 'Galerie' },
+  { id: 'mnichovice',   label: 'O projektu' },
+  { id: 'rekonstrukce', label: 'Rekonstrukce' },
+  { id: 'dispozice',    label: 'Dispozice' },
+  { id: 'lokalita',     label: 'Lokalita' },
+  { id: 'sluzby',       label: 'Služby' },
+  { id: 'kontakt',      label: 'Kontakt' },
 ];
 ---
 
@@ -100,8 +113,8 @@ const serviceCards = [
   description="Kompletní rekonstrukce rodinného domu v Mnichovicích, 15 minut od Prahy. 5+1, 159 m² užitné plochy, pozemek 480 m². Cena 31 900 000 Kč. Prodává INVBUILD."
 >
   <Header />
+  <SectionNav items={navItems} />
 
-  <!-- HERO -->
   <Hero
     title="Rodinný dům Mnichovice"
     location="Mnichovice · Praha-východ"
@@ -121,7 +134,7 @@ const serviceCards = [
     <Gallery images={galleryImages} />
   </Section>
 
-  <!-- 02 — MNICHOVICE -->
+  <!-- 02 — O PROJEKTU -->
   <Section id="mnichovice" variant="bone">
     <StorySplit
       num="02"
@@ -137,7 +150,7 @@ const serviceCards = [
       </p>
       <p>
         Projekt je zasazený do venkovského stylu s moderními prvky architektury.
-        Nabídne novým majitelům letní i zimní zahradu, celé volné patro k využití
+        Nabídne novým majitelům letní i zimní zahradu, celé volné patro
         nad garáží a hlavně dostatek soukromí.
       </p>
     </StorySplit>
@@ -165,14 +178,10 @@ const serviceCards = [
         činit <strong>159 m²</strong>.
       </p>
       <p>
-        V rámci celkové rekonstrukce vznikne také zastřešená garáž, která
-        v horním patře nabídne pokoj pro hosty či pánský klub. Přístavba
-        jídelny umožní krásný výhled přímo z domu na zahradu a vznik terasy
-        v horním patře s přístupem k ložnici.
-      </p>
-      <p>
-        Bonusem je <strong>letní / zimní zahrada (kuchyň)</strong>, která nabídne
-        příjemné chvíle s rodinou či přáteli, nehledě na počasí.
+        V rámci celkové rekonstrukce vznikne také zastřešená garáž
+        s pokojem pro hosty v horním patře a přístavba jídelny s výhledem
+        na zahradu. Bonusem je <strong>letní / zimní zahrada (kuchyň)</strong>
+        nezávislá na počasí.
       </p>
     </StorySplit>
   </Section>
@@ -200,7 +209,7 @@ const serviceCards = [
     </StorySplit>
   </Section>
 
-  <!-- 05 — LOKALITA / SEZNÁMENÍ S BUDOVOU -->
+  <!-- 05 — LOKALITA -->
   <Section
     id="lokalita"
     variant="dark"
@@ -242,6 +251,5 @@ const serviceCards = [
   </Section>
 
   <Footer />
-
   <Reveal />
 </Layout>

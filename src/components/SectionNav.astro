@@ -1,0 +1,182 @@
+---
+// SectionNav — sticky pravý scrollspy: dots + label na hover, klikatelné, aktivní stav.
+// Skrývá se na mobilu (drawer menu pokrývá tu funkci).
+export interface Props {
+  items: { id: string; label: string }[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="snav" aria-label="Navigace po sekcích" data-section-nav>
+  <ul role="list">
+    {items.map((it, i) => (
+      <li>
+        <a href={`#${it.id}`} data-snav-link={it.id} aria-label={`${String(i + 1).padStart(2, '0')} — ${it.label}`}>
+          <span class="snav__num lining">{String(i + 1).padStart(2, '0')}</span>
+          <span class="snav__label">{it.label}</span>
+          <span class="snav__dot" aria-hidden="true"></span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .snav {
+    position: fixed;
+    right: clamp(0.75rem, 1.5vw, 1.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: var(--z-sticky);
+    pointer-events: none;
+  }
+  .snav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    pointer-events: auto;
+  }
+
+  .snav a {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0;
+    color: var(--ink);
+    opacity: 0.45;
+    transition: opacity var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .snav a:hover,
+  .snav a[data-active='true'] { opacity: 1; }
+
+  .snav__num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-wide);
+    color: var(--muted);
+    text-align: right;
+    min-width: 1.6em;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-out);
+  }
+  .snav__label {
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--ink);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-out);
+  }
+
+  .snav__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    transition: width var(--dur-base) var(--ease-out),
+                background var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+  }
+
+  /* Active state */
+  .snav a[data-active='true'] .snav__dot {
+    background: var(--accent);
+    width: 18px;
+    border-radius: 3px;
+  }
+  .snav a[data-active='true'] .snav__num,
+  .snav a[data-active='true'] .snav__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Hover reveals label (when not active) */
+  .snav a:hover .snav__num,
+  .snav a:hover .snav__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .snav a:hover .snav__dot { transform: scale(1.2); }
+
+  /* On dark sections — invert colors */
+  .snav[data-on-dark='true'] a { color: var(--paper); }
+  .snav[data-on-dark='true'] .snav__num   { color: rgba(255,255,255,0.7); }
+  .snav[data-on-dark='true'] .snav__label { color: var(--paper); }
+
+  /* Hide on mobile/tablet */
+  @media (max-width: 1100px) {
+    .snav { display: none; }
+  }
+</style>
+
+<script>
+  const nav  = document.querySelector<HTMLElement>('[data-section-nav]');
+  const links = nav ? Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-snav-link]')) : [];
+  const sections = links
+    .map((l) => document.getElementById(l.dataset.snavLink ?? ''))
+    .filter((el): el is HTMLElement => !!el);
+
+  if (nav && links.length && sections.length) {
+    // Track which section is most visible
+    let activeId = '';
+    const setActive = (id: string) => {
+      if (id === activeId) return;
+      activeId = id;
+      links.forEach((l) => {
+        l.dataset.active = l.dataset.snavLink === id ? 'true' : 'false';
+      });
+    };
+
+    // Detect dark sections under the nav — flip colors
+    const updateContrast = () => {
+      const cx = window.innerWidth - 30; // right edge
+      const cy = window.innerHeight / 2;
+      const el = document.elementFromPoint(cx, cy);
+      const dark = el?.closest('.section--dark') || el?.closest('#hero');
+      nav.dataset.onDark = dark ? 'true' : 'false';
+    };
+
+    // IntersectionObserver — pick section with biggest visible area
+    const io = new IntersectionObserver(
+      () => {
+        let bestId = activeId;
+        let bestRatio = 0;
+        for (const s of sections) {
+          const r = s.getBoundingClientRect();
+          const vis = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
+          const ratio = vis / window.innerHeight;
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = s.id;
+          }
+        }
+        if (bestId) setActive(bestId);
+        updateContrast();
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    sections.forEach((s) => io.observe(s));
+
+    // Recompute contrast on scroll too (cheap)
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => { updateContrast(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Initial
+    setActive(sections[0].id);
+    updateContrast();
+  }
+</script>
