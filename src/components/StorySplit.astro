@@ -87,6 +87,10 @@ const {
     background: var(--paper-bone);
     position: relative;
   }
+  @media (max-width: 600px) {
+    .split__media { aspect-ratio: 4 / 3; }
+    .split { gap: 1.25rem; }
+  }
   .split__media img {
     width: 100%; height: 100%; object-fit: cover;
     transition: transform 1.2s var(--ease-out);

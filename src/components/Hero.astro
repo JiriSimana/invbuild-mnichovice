@@ -130,7 +130,7 @@ const { title, location, stats, images } = Astro.props;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px; height: 48px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     background: rgba(20,17,12,0.42);
     color: var(--paper);
@@ -146,8 +146,13 @@ const { title, location, stats, images } = Astro.props;
     background: rgba(20,17,12,0.65);
     border-color: rgba(255,255,255,0.4);
   }
-  .hero__arrow--prev { left: clamp(1rem, 2.5vw, 2rem); }
-  .hero__arrow--next { right: clamp(1rem, 2.5vw, 2rem); }
+  .hero__arrow--prev { left: clamp(0.5rem, 2vw, 1.5rem); }
+  .hero__arrow--next { right: clamp(0.5rem, 2vw, 1.5rem); }
+  @media (max-width: 480px) {
+    .hero__arrow { width: 40px; height: 40px; }
+    .hero__arrow--prev { left: 0.5rem; }
+    .hero__arrow--next { right: 0.5rem; }
+  }
 
   /* slide counter */
   .hero__counter {
@@ -202,6 +207,14 @@ const { title, location, stats, images } = Astro.props;
       0 2px 16px rgba(0,0,0,0.45),
       0 1px 3px rgba(0,0,0,0.6);
   }
+  /* mobil — menší title + max-width */
+  @media (max-width: 600px) {
+    .hero__title {
+      font-size: clamp(2.4rem, 9vw, 3.2rem);
+      max-width: 14ch;
+      line-height: 1.02;
+    }
+  }
 
   /* stats */
   .hero__stats {
@@ -212,7 +225,7 @@ const { title, location, stats, images } = Astro.props;
     border-top: 1px solid rgba(255,255,255,0.25);
     align-self: end;
   }
-  .hero__stat { display: flex; flex-direction: column; gap: 0.35rem; }
+  .hero__stat { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
   .hero__stat-label {
     font-family: var(--font-sans);
     font-size: var(--fs-xs);
@@ -228,6 +241,19 @@ const { title, location, stats, images } = Astro.props;
     letter-spacing: var(--tracking-tight);
     line-height: 1.1;
     text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  }
+  /* mobil — 2×2 stats, menší písmo */
+  @media (max-width: 600px) {
+    .hero__stats {
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 1.25rem;
+    }
+    .hero__stat-value { font-size: var(--fs-lg); }
+    .hero__stat-label { letter-spacing: var(--tracking-wide); }
+  }
+  @media (max-width: 360px) {
+    .hero__stats { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .hero__stat-value { font-size: var(--fs-base); font-weight: 700; }
   }
 
   /* scroll indicator */

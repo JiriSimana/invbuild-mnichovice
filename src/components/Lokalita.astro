@@ -90,6 +90,19 @@ const mapyHref = `https://mapy.cz/?x=${lng}&y=${lat}&z=14&q=${encodeURIComponent
     width: 100%; height: 100%; border: 0;
     filter: grayscale(0.45) contrast(1.03);
   }
+  /* Mobil — mapa na šířku místo na výšku */
+  @media (max-width: 1000px) {
+    .lokalita__map {
+      aspect-ratio: 16 / 10;
+      min-height: 240px;
+    }
+  }
+  @media (max-width: 520px) {
+    .lokalita__map {
+      aspect-ratio: 4 / 3;
+      min-height: 220px;
+    }
+  }
 
   .lokalita__map-meta {
     display: flex;
@@ -176,6 +189,11 @@ const mapyHref = `https://mapy.cz/?x=${lng}&y=${lat}&z=14&q=${encodeURIComponent
     color: rgba(255, 255, 255, 0.78);
     max-width: 60ch;
   }
+  @media (max-width: 700px) {
+    .acc__body { padding-left: 0; padding-right: 0; }
+    .acc__head { gap: 0.7rem; padding: 0.75rem 0; }
+    .acc__title { font-size: var(--fs-base); }
+  }
   .acc__body :global(p) {
     margin-bottom: 0.65rem;
     color: rgba(255, 255, 255, 0.88);
@@ -215,8 +233,4 @@ const mapyHref = `https://mapy.cz/?x=${lng}&y=${lat}&z=14&q=${encodeURIComponent
   :global(.section:not(.section--dark)) .acc__body :global(strong) { color: var(--ink); }
   :global(.section:not(.section--dark)) .acc__icon { color: var(--muted-soft); }
 
-  /* Mobile fine-tuning */
-  @media (max-width: 600px) {
-    .acc__body { padding-left: 0; }
-  }
 </style>

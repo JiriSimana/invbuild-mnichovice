@@ -66,8 +66,8 @@
   --space-10: 9rem;
 
   /* Section vertical rhythm — výrazně zkráceno, web musí dýchat ale né plavat */
-  --pad-section:       clamp(3.5rem, 5.5vw, 6rem);
-  --pad-section-tight: clamp(2.5rem, 4vw, 4rem);
+  --pad-section:       clamp(3rem, 5.5vw, 6rem);
+  --pad-section-tight: clamp(2rem, 4vw, 4rem);
 
   --container-max:     1440px;
   --container-default: 1240px;
