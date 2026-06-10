@@ -20,15 +20,35 @@ const stats = [
   { label: 'Cena',              value: '31 900 000 Kč' },
 ];
 
+// Hero — 3 exteriérové vizualizace (NE interiéry jak bylo)
 const heroImages = [
-  { src: '/img/mnichovice-01.webp', alt: 'Rodinný dům Mnichovice — pohled z ulice' },
-  { src: '/img/mnichovice-05.webp', alt: 'Rodinný dům Mnichovice — boční pohled' },
-  { src: '/img/mnichovice-07.webp', alt: 'Rodinný dům Mnichovice — exteriér s terasou' },
+  { src: '/img/mnichovice-10.webp', alt: 'Rodinný dům Mnichovice — pohled z terasy' },
+  { src: '/img/mnichovice-12.webp', alt: 'Rodinný dům Mnichovice — pohled na celý dům z výšky' },
+  { src: '/img/mnichovice-13.webp', alt: 'Rodinný dům Mnichovice — exteriér s garáží' },
 ];
 
+// Galerie — 16 vizualizací s realistickými popisky
+const galleryAlts: Record<string, string> = {
+  '01': 'Podkroví — herní zóna s pingpongovým stolem',
+  '02': 'Podkroví — odpočinková zóna se zelenou sedačkou',
+  '03': 'Podkroví — pohled z druhé strany',
+  '04': 'Jídelna s oválným stolem a kuchyní v pozadí',
+  '05': 'Hlavní ložnice se střešními okny',
+  '06': 'Druhá ložnice s prosklenou stěnou',
+  '07': 'Koupelna s designovým umyvadlem',
+  '08': 'Druhá koupelna se sprchovým koutem',
+  '09': 'Obývací pokoj s kuchyňským ostrůvkem',
+  '10': 'Pohled na dům z terasy',
+  '11': 'Zahrada s kamennou zídkou',
+  '12': 'Pohled z výšky na celý dům a pozemek',
+  '13': 'Exteriér s garáží — celkový pohled',
+  '14': 'Jídelní kout u prosklené stěny s terasou',
+  '15': 'Jídelní kout otevřený na terasu',
+  '16': 'Obývací pokoj s TV a pohledem na kuchyni',
+};
 const galleryImages = Array.from({ length: 16 }, (_, i) => {
   const n = String(i + 1).padStart(2, '0');
-  return { src: `/img/mnichovice-${n}.webp`, alt: `Vizualizace ${i + 1} — Rodinný dům Mnichovice` };
+  return { src: `/img/mnichovice-${n}.webp`, alt: `Vizualizace ${i + 1} — ${galleryAlts[n]}` };
 });
 
 const locGroups = [
@@ -89,26 +109,26 @@ const locGroups = [
   },
 ];
 
-// Gateway cards — odkazy na hlavní INVBUILD web
+// Gateway cards — odkazy na invbuild.cz s relevantními interiérovými fotkami
 const gatewayCards = [
   {
     title: 'Naše projekty',
     blurb: 'Další developerské projekty od INVBUILD — nízkoenergetické stavby i rekonstrukce.',
-    image: { src: '/img/mnichovice-08.webp', alt: 'Developerský projekt INVBUILD' },
+    image: { src: '/img/mnichovice-14.webp', alt: 'Jídelní kout u prosklené stěny' },
     href: 'https://invbuild.cz/projekty',
     external: true,
   },
   {
     title: 'Reality v nabídce',
     blurb: 'Prodej i pronájem nemovitostí s profesionálním a lidským přístupem.',
-    image: { src: '/img/mnichovice-15.webp', alt: 'Reality INVBUILD' },
+    image: { src: '/img/mnichovice-15.webp', alt: 'Jídelní kout otevřený na terasu' },
     href: 'https://invbuild.cz/reality',
     external: true,
   },
   {
     title: 'Naše služby',
     blurb: 'Hypotéka, odhad, pojištění, právní servis, foto/video, VR prohlídky.',
-    image: { src: '/img/mnichovice-04.webp', alt: 'Služby INVBUILD' },
+    image: { src: '/img/mnichovice-16.webp', alt: 'Obývací pokoj s TV' },
     href: 'https://invbuild.cz',
     external: true,
   },
@@ -158,8 +178,8 @@ const navItems = [
       num="02"
       eyebrow="O projektu"
       title="Mnichovice"
-      caption="Vizualizace 12 — Jídelna"
-      image={{ src: '/img/mnichovice-12.webp', alt: 'Jídelna v rodinném domě Mnichovice' }}
+      caption="Vizualizace 04 — Jídelna"
+      image={{ src: '/img/mnichovice-04.webp', alt: 'Jídelna s oválným stolem a kuchyní v pozadí' }}
     >
       <p>
         Přinášíme kompletní rekonstrukci rodinného domu se zahradou v obci
@@ -185,8 +205,8 @@ const navItems = [
       num="03"
       eyebrow="Stavba"
       title="Rekonstrukce"
-      caption="Vizualizace 09 — Obývací prostor"
-      image={{ src: '/img/mnichovice-09.webp', alt: 'Obývací prostor s kuchyní a barovým pultem' }}
+      caption="Vizualizace 09 — Obývací pokoj s kuchyní"
+      image={{ src: '/img/mnichovice-09.webp', alt: 'Obývací pokoj s kuchyňským ostrůvkem' }}
     >
       <p>
         Prodejní cena platí po dokončení rekonstrukce, která <strong>začala
@@ -215,8 +235,8 @@ const navItems = [
       num="04"
       eyebrow="Dispozice"
       title="Pět plus jedna."
-      caption="Vizualizace 02 — Pohled na dům"
-      image={{ src: '/img/mnichovice-02.webp', alt: 'Pohled na dům s prosklenou fasádou a zahradou' }}
+      caption="Vizualizace 11 — Zahrada s kamennou zídkou"
+      image={{ src: '/img/mnichovice-11.webp', alt: 'Zahrada s kamennou zídkou — propojení interiéru s přírodou' }}
     >
       <p>
         Rodinný dům nabídne dispozici <strong>5+1, případně 6+1</strong>,
