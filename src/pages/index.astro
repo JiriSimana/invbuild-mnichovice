@@ -91,6 +91,18 @@ const locGroups = [
       </ul>`,
   },
   {
+    id: 'okna',
+    title: 'Okna, dveře a chytrá domácnost',
+    content: `<p>V celém domě budou osazena kvalitní <strong>hliníková okna</strong>
+      (značky <strong>Okonotherm</strong>) s výbornými tepelně izolačními vlastnostmi.
+      Hlavní vstup zajistí <strong>hliníkové protipožární dveře</strong>.</p>
+      <p>Komfort bydlení zvýší <strong>venkovní rolety</strong>, které zajistí soukromí,
+      ochranu před sluncem i lepší energetickou efektivitu domu.</p>
+      <p>Celý objekt bude navíc <strong>připraven pro instalaci systému chytré
+      domácnosti</strong> — ovládání vytápění, stínění, osvětlení či zabezpečení
+      prostřednictvím moderních technologií.</p>`,
+  },
+  {
     id: 'stodola',
     title: 'Stodola a kůlna',
     content: `<ul>
@@ -249,9 +261,18 @@ const navItems = [
         Součástí potenciálu nemovitosti je velká garáž s horním patrem
         a letní / zimní zahrada.
       </p>
-      <p class="split__cta-wrap">
-        <a href="/dokumenty/pudorys-mnichovice.pdf" target="_blank" rel="noopener" class="btn btn--ink">
-          Stáhnout PDF půdorys
+      <p class="split__cta-wrap split__cta-wrap--multi">
+        <a href="/dokumenty/mnichovice-pudorys-1NP.pdf" target="_blank" rel="noopener" class="btn btn--ink">
+          Půdorys 1. NP (PDF)
+        </a>
+        <a href="/dokumenty/mnichovice-pudorys-2NP.pdf" target="_blank" rel="noopener" class="btn btn--ink">
+          Půdorys 2. NP (PDF)
+        </a>
+        <a href="/dokumenty/mnichovice-pohled-jihozapadni.pdf" target="_blank" rel="noopener" class="btn btn--ghost">
+          Pohled JZ
+        </a>
+        <a href="/dokumenty/mnichovice-pohled-severozapadni.pdf" target="_blank" rel="noopener" class="btn btn--ghost">
+          Pohled SZ
         </a>
       </p>
     </StorySplit>
@@ -306,5 +327,10 @@ const navItems = [
   /* Wrapper for inline CTAs inside StorySplit body */
   .split__body .split__cta-wrap {
     margin-top: 1.5rem;
+  }
+  .split__body .split__cta-wrap--multi {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 </style>
